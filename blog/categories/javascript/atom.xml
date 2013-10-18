@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Javascript | 尹良灿得闲]]></title>
+  <link href="http://wenLiangcan.github.io/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://wenLiangcan.github.io/"/>
+  <updated>2013-10-18T20:41:36+08:00</updated>
+  <id>http://wenLiangcan.github.io/</id>
+  <author>
+    <name><![CDATA[wenLiangcan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JS 操作 iframe 非跨域引用页面的DOM]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2013/06/30/iframe-dom/"/>
+    <updated>2013-06-30T00:00:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2013/06/30/iframe-dom</id>
+    <content type="html"><![CDATA[<p>偶然发现了学校校园网登录页上验证码的奇葩特性：</p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/6w4hjuewsb8xzbh/CAPTCHA.png?token_hash=AAFpHUTYN6B9vrtHK1plhgeV3N10ZWyFGHPKlx5PsBQeKw&amp;dl=1" alt="" /></p>
+
+<p>于是写了个小书签，自动填写验证码并登录：        <br/>
+<code>javascript    
+javascript:(function(){var a=document.getElementById("main").contentWindow;a.document.getElementById("rand").value=a.document.getElementById("confirmrand").value;a.document.getElementById("login1").submit();})()  
+</code>            <br/>
+登录信息填写的部分是一个由 iframe 标签引用的非跨域页面，可以通过 <em>contentWindow</em> 属性在父页面中对其元素进行操作：      <br/>
+<code>javascript   
+var a=doucument.getElementById("iframe 标签的ID").contentWindow;   
+</code></p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="http://hi.baidu.com/tang_guangyao/item/464da28619aa49e9b07154dd">javascript访问操作iframe中的元素（不跨域）</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

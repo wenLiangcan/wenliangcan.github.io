@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | 尹良灿得闲]]></title>
+  <link href="http://wenLiangcan.github.io/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://wenLiangcan.github.io/"/>
+  <updated>2013-10-18T20:41:36+08:00</updated>
+  <id>http://wenLiangcan.github.io/</id>
+  <author>
+    <name><![CDATA[wenLiangcan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[修正图片文件扩展名的 Python 脚本]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2013/10/18/correct-image-file-extension/"/>
+    <updated>2013-10-18T16:32:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2013/10/18/correct-image-file-extension</id>
+    <content type="html"><![CDATA[<p>有时候从往上下再下来的图片会出现扩展名与实际的图片格式不一致的情况，在 Linux 里我用 <a href="http://projects.gnome.org/eog/" title="Homepage">Eye of GNOME</a> 看图，就会因为这样而无法显示。</p>
+
+<p>最近尝试自学 Python，查了一下相关资料后试着写了一个识别图片格式并更正扩展名的脚本。</p>
+
+<h3>1. 识别图片格式</h3>
+
+<p>不看扩展名如何知道一个图片文件是什么格式呢？ 网上说的比较多的是通过检查<a href="http://baike.baidu.com/view/1606305.htm">文件头</a>标志的方法来判断图片格式，可是自己写的话感觉有点麻烦。</p>
+
+<p>其实已经有现成的轮子可以用了，就是 <code>imghdr</code> 这个模块，可以看一下它的 Docstring 的说明     <br/>
+```python</p>
+
+<blockquote><blockquote><blockquote><p>import imghdr
+print imghdr.<strong>doc</strong>
+Recognize image file formats based on their first few bytes.
+```</p></blockquote></blockquote></blockquote>
+
+<p>只能识别一些常见的图片格式，对一些特殊的图片文件比如 svg， psd 就无力了，不过已经满足我的需求啦。</p>
+
+<p>用法：
+<code>python
+imghdr.what(&lt;image_file&gt;)
+</code>
+返回对应格式的扩展名字符串。</p>
+
+<h3>2. 更正文件扩展名</h3>
+
+<p>需要用到一些文件操作的方法，用到 <code>os</code> 这个模块，记录一下：</p>
+
+<ul>
+<li><code>os.chdir(dirname)</code>: 用于改变工作路径到 dirname。</li>
+<li><code>os.listdir(dirname)</code>: 列出 dirname 下的目录和文件。</li>
+<li><code>os.path.isfile(name)</code>: 判断 name 是否为文件。</li>
+<li><code>os.path.splitext()</code>: 分离文件名与扩展名。</li>
+<li><code>os.rename(a, b)</code>: 重命名文件。</li>
+</ul>
+
+
+<h3>3. 脚本</h3>
+
+<p>```python correct-image-file-extension.py https://gist.github.com/wenLiangcan/7040164</p>
+
+<h1>!/usr/bin/python</h1>
+
+<p>import os, sys, imghdr</p>
+
+<h1>允许指定文件目录，默认则检测当前目录</h1>
+
+<p>if len(sys.argv) == 2:</p>
+
+<pre><code>try:
+    os.chdir(sys.argv[1])
+except OSError, e:
+    if e.errno == 2:
+        print "No such file or directory: '%s'" % sys.argv[1]
+</code></pre>
+
+<p>for i in os.listdir('.'):</p>
+
+<pre><code>if os.path.isfile(i):
+    name = i
+    #有时候会出现 ".png.jpg" 这样格式的扩展名，为了美观，作相应的调整。
+    while os.path.splitext(os.path.splitext(name)[0])[1] != '':
+        name = os.path.splitext(name)[0]
+    fmt = imghdr.what(i)
+    xname = os.path.splitext(name)[1][1:].lower()
+    if fmt != None and fmt != xname:
+        #JPEG 图片的扩展名有时会简写为 jpg，而 imghdr 里则表示为 jpeg，遇到这样的情况直接跳过不再更改。
+        if fmt == 'jpeg' and xname == 'jpg':
+            continue
+        cn = os.path.splitext(name)[0] + '.' + fmt
+        os.rename(i, cn) 
+        print 'Renamed %s to %s' % (i, cn)
+</code></pre>
+
+<p>```</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="http://stackoverflow.com/a/902779/1436873">How to check if a file is a valid image file?</a></li>
+<li><a href="http://stackoverflow.com/a/2491232/1436873">How to rename a file using Python</a></li>
+<li><a href="http://www.cnblogs.com/vivilisa/archive/2009/03/01/1400968.html">python天天进步(2)--文件操作之遍历目录</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

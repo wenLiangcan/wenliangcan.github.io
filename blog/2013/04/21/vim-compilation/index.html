@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Windows下编译支持多种脚本语言的64位VIM(GVIM) - 尹良灿得闲</title>
+  <meta name="author" content="wenLiangcan">
+
+  
+  <meta name="description" content="想要玩一下 VimIRC.vim 这款插件，不过这货竟然是 Perl 写的，而我用的 vim 没有加入 Perl 支持，所以想不如试试编译一个支持多种脚本语言的 vim Vim版本：7.3.905
+需要支持的语言：Python2/3， Ruby， Perl， Lua， Tcl
+编译环境： &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40394985-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">尹良灿得闲</a></h1>
+  
+    <h2>巴甫洛夫很忙……巴甫洛夫正在死亡</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/wenLiangcan" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:wenLiangcan.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Windows下编译支持多种脚本语言的64位VIM(GVIM)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-21T10:30:00+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2013</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>想要玩一下 <a href="http://www.vim.org/scripts/script.php?script_id=931">VimIRC.vim</a> 这款插件，不过这货竟然是 Perl 写的，而我用的 vim 没有加入 Perl 支持，所以想不如试试编译一个支持多种脚本语言的 vim</p>
+
+<ul>
+<li><strong>Vim版本</strong>：7.3.905</li>
+<li><strong>需要支持的语言</strong>：Python2/3， Ruby， Perl， Lua， Tcl</li>
+<li><strong>编译环境</strong>：Cygwin</li>
+<li><strong>操作系统</strong>：64 位的 Windows8</li>
+</ul>
+
+
+<h2>一.准备工作</h2>
+
+<h4>1.Cygwin</h4>
+
+<p>除了默认的组件外，还需要选择以下的包：autobuild，autoconf，automake，binutils，cmake，gcc-core，gcc,gcc-g77，gcc-g++，gcc4-core，gcc4，gcc4-g++，make，makedepend，pkg-config，gcc-mingw-core，gcc-mingw-g++，gdb，最后，因为现在是编译 64 位版本的 vim 而我又不清楚具体需要哪些包，所以直接搜索 64，选择安装所有的搜索结果 XD</p>
+
+<h4>2.各种语言的包</h4>
+
+<p>我一律选择了 64 位的版本。Python 分别为 2.7.3 跟 3.3.1。Ruby 本来纠结是用 1.9.3 还是 2.0.0 好，本来电脑里因为配置 Octopress 已经安装了 1.9.3 ,可是 RubyInstaller 似乎只有 2.0 有 64 位的版本，又不知道 Octopress 对 2.0 会不会有兼容性问题。最后选择了下 2.0.0 的 zip 包。Perl 5 的实现选用了 ActivePerl，版本为 5.16.3。Lua 到<a href="http://luabinaries.sourceforge.net/download.html">这里</a>下载 <a href="http://sourceforge.net/projects/luabinaries/files/5.2.1/Executables/lua-5.2.1_Win64_bin.zip/download">lua-5.2.1_Win64_bin.zip</a> 和 <a href="http://sourceforge.net/projects/luabinaries/files/5.2.1/Windows%20Libraries/Dynamic/lua-5.2.1_Win64_dllw4_lib.zip/download">lua-5.2.1_Win64_dllw4_lib.zip</a> 这两个文件，解压到同一目录下。</p>
+
+<p><em>update (20130501)</em>：增加对 Tcl 的支持，版本为 <a href="http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.5.13.0/ActiveTcl8.5.13.0.296436-win32-x86_64-threaded.exe">ActiveTcl 8.5.13</a>。原本打算用 8.6 的，无奈编译不成功，原因不明。。。</p>
+
+<h4>3.VIM 源代码</h4>
+
+<p>在这里 <a href="ftp://ftp.vim.org/pub/vim/pc/">ftp://ftp.vim.org/pub/vim/pc/</a> 下载，当然是选
+7.3啦，找到 vim73_46rt.zip，vim73_46src.zip 这两个包，前一个是运行时文件后一个是源代码，从 7.3 开始语言文件已经打包进了runtime里。然后再到这里 <a href="ftp://ftp.vim.org/pub/vim/patches/7.3/">ftp://ftp.vim.org/pub/vim/patches/7.3/</a> 下载补丁。        <br/>
+不过这些补丁实在太多了（911 个！），下载起来实在有点麻烦。最开始想到用 Firefox的DownThemAll 扩展，不过不知为什么下载下来的文件名开头都多了个 2.3（记不太清，反正就是多了几个数字，不过现在想想其实也没什么影响 ←_←）。然后又想到在资源管理器打开再全选复制，不过速度实在慢的可以。最终 google 后选择了 wget，查了一下命令：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ wget -c -r -nd -np www.xxx.org/pub/path/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>-c：断点续传；-r：递归目录；-nd：递归是不创建各层目录直接下载到当前目录下；-np：递归时不搜索上层目录。             <br/>
+把vim73_46src.zip里的src 文件夹（其他的可有可无）解压到一个暂命名为 make 的目录下，把所有的补丁文件放到与 make 目录同级的 patches 文件夹里。打开 Cygwin，c d到 make 目录下(在 Cygwin 里的 /cygdrive 路径下可以找到系统里的各分区)，执行以下命令打补丁：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ for file in ../patches/7.3.*; do patch -Np0 -i $file; done   </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>二.开始编译</h2>
+
+<p>cd 到 src 文件夹下，执行以下编译命令：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ make -f Make_cyg.mak CC=x86_64-w64-mingw32-gcc RC=x86_64-w64-mingw32-windres ARCH=x86-64 PYTHON=/cygdrive/c/Python27 PYTHON_VER=27 DYNAMIC_PYTHON=yes PYTHON3=/cygdrive/c/Python33 PYTHON3_VER=33 DYNAMIC_PYTHON3=yes RUBY=/cygdrive/c/Ruby200_64 RUBY_VER=200 RUBY_VER_LONG=2.0.0 DYNAMIC_RUBY=yes LUA=/cygdrive/c/Lua52 LUA_VER=52 DYNAMIC_LUA=yes PERL=/cygdrive/c/Perl64 PERL_VER=516 DYNAMIC_PERL=yes TCL=/cygdrive/c/Tcl TCL_VER=85 DYNAMIC_TCL=yes -j5 GUI=yes STATIC_STDCPLUS=yes OLE=yes FEATURES=HUGE USERNAME=wenLiangcan USERDOMAIN=Cygwin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>*_VER 跟 *_VER_LONG 的区别是，前者使用不带“.”的版本号，如 200，而后者则需要，如 2.0.0。查看 Make_cyg.ma k文件可以发现，对 ruby 的支持编译需要通过版本号定位到 \$(RUBY)/lib/ruby/\$(RUBY_VER_LONG)/… 这样的路径下，所以对 ruby 使用的这个参数。    <br/>
+不使用 STATIC_STDCPLUS=yes 的话，gvim 运行时会需要 libstdc++-6.dll 跟 libgcc_s_sjlj-1.dll 这两个文件。        <br/>
+GUI=yes 就是编译 gvim，GUI=no 则编译 vim。         <br/>
+多字长跟 cscope 支持都是默认为 yes。       <br/>
+编译完成后，复制 src/ 下的 vim.exe，gvim.exe，install.exe，uninstal.exe，vimrun.exe 跟 GvimExt/ 下的 gvimext.dll（用来添加系统右键菜单的“Edit with Vim”） 还有 xxd/ 下的 xxd.exe到运行时目录下（由 vim73_46rt.zip 解压得到）就可以啦。如果需要安装，就在 cmd 里以管理员权限运行 install.exe。</p>
+
+<h2>三.查看成果</h2>
+
+<p>运行 vim/gvim ，执行命令：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:version                        </span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/j558p79x9rnx5cf/vim_version.jpg?token_hash=AAFQm5Bxld04uNOc_j4PaJ_ArAir2S0sI2FDMEEfpjAARA&amp;dl=1" alt="" /></p>
+
+<p>(￣一￣)y</p>
+
+<p>附上<a href="https://bitbucket.org/wenliangcan/win64-releases-of-vim-with-multiple-languages-surpport/downloads">下载</a></p>
+
+<h2>四.补充</h2>
+
+<p>1.中文系统下 cygwin 的 shell 也会自动支持中文，如果编译过程出现错误想要复制 google
+一下，英文关键词的搜索结果往往会更准确，所以我想把它改为英文提示，可以在 ~/.bashrc 里末尾加上：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">LANG</span><span class="o">=</span><span class="s1">&#39;en_US&#39;</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">LC_ALL</span><span class="o">=</span><span class="s1">&#39;en_US.GBK&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.编译后可以执行以下命令清理编译文件：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>make -f Make_cyg.mak clean
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>五.参考资料</h2>
+
+<ul>
+<li><a href="http://www.vimer.cn/2010/04/windows%E4%B8%8B%E7%BC%96%E8%AF%91vimgvim%E5%B9%B6%E5%8A%A0%E5%85%A5python2-6%E5%92%8C3-1%E6%94%AF%E6%8C%81.html">windows下编译vim(gvim)并加入python2.6和3.1支持</a></li>
+<li><a href="https://groups.google.com/forum/?fromgroups=#!topic/vim_dev/2_bsP-SfnRo">How to compile 64 bit with cygwin/mingw?</a></li>
+<li><a href="http://people.smu.edu/jrobinet/howto/compile-vim-on-windows.asp">Compiling Vim on Windows</a></li>
+<li><a href="http://www.joynb.net/blog/archives/973">[转载]本人在cygwin下完整工作环境的搭建(备忘)</a></li>
+<li><a href="http://blog.csdn.net/jianping_shen/article/details/6300638">eclipse+cdt+cygwin配置c/c++开发环境</a></li>
+<li><a href="http://5iwww.blog.51cto.com/856039/620831">使用wget递归下载某目录下的所有文件</a></li>
+<li><a href="http://blog.csdn.net/a221133/article/details/7043318">让cygwin使用英文shell界面</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">wenLiangcan</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-21T10:30:00+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/vim/'>Vim</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/14/test/" title="Previous Post: test">&laquo; test</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/04/24/sql-multiple-row-insert/" title="Next Post: SQL：一次性插入多个元组">SQL：一次性插入多个元组 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    ﻿<section>
+  <h1>About Me</h1>
+  <p>我是尹良灿</p>
+  <p>闲人一个</p>
+  <p>这是我的学习笔记</p>
+</section><section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/db/'>DB (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (1)</a></li>
+<li class='category'><a href='/blog/categories/sql/'>SQL (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>Vim (1)</a></li>
+
+  </ul>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/correct-image-file-extension/">修正图片文件扩展名的 Python 脚本</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/30/iframe-dom/">JS 操作 Iframe 非跨域引用页面的DOM</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/24/sql-multiple-row-insert/">SQL：一次性插入多个元组</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/21/vim-compilation/">Windows下编译支持多种脚本语言的64位VIM(GVIM)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/14/test/">Test</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - wenLiangcan -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'wenLiangcan';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

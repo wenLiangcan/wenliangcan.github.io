@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Vim | 尹良灿得闲]]></title>
+  <link href="http://wenLiangcan.github.io/blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://wenLiangcan.github.io/"/>
+  <updated>2013-10-18T20:41:36+08:00</updated>
+  <id>http://wenLiangcan.github.io/</id>
+  <author>
+    <name><![CDATA[wenLiangcan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Windows下编译支持多种脚本语言的64位VIM(GVIM)]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation/"/>
+    <updated>2013-04-21T10:30:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2013/04/21/vim-compilation</id>
+    <content type="html"><![CDATA[<p>想要玩一下 <a href="http://www.vim.org/scripts/script.php?script_id=931">VimIRC.vim</a> 这款插件，不过这货竟然是 Perl 写的，而我用的 vim 没有加入 Perl 支持，所以想不如试试编译一个支持多种脚本语言的 vim</p>
+
+<ul>
+<li><strong>Vim版本</strong>：7.3.905</li>
+<li><strong>需要支持的语言</strong>：Python2/3， Ruby， Perl， Lua， Tcl</li>
+<li><strong>编译环境</strong>：Cygwin</li>
+<li><strong>操作系统</strong>：64 位的 Windows8</li>
+</ul>
+
+
+<h2>一.准备工作</h2>
+
+<h4>1.Cygwin</h4>
+
+<p>除了默认的组件外，还需要选择以下的包：autobuild，autoconf，automake，binutils，cmake，gcc-core，gcc,gcc-g77，gcc-g++，gcc4-core，gcc4，gcc4-g++，make，makedepend，pkg-config，gcc-mingw-core，gcc-mingw-g++，gdb，最后，因为现在是编译 64 位版本的 vim 而我又不清楚具体需要哪些包，所以直接搜索 64，选择安装所有的搜索结果 XD</p>
+
+<h4>2.各种语言的包</h4>
+
+<p>我一律选择了 64 位的版本。Python 分别为 2.7.3 跟 3.3.1。Ruby 本来纠结是用 1.9.3 还是 2.0.0 好，本来电脑里因为配置 Octopress 已经安装了 1.9.3 ,可是 RubyInstaller 似乎只有 2.0 有 64 位的版本，又不知道 Octopress 对 2.0 会不会有兼容性问题。最后选择了下 2.0.0 的 zip 包。Perl 5 的实现选用了 ActivePerl，版本为 5.16.3。Lua 到<a href="http://luabinaries.sourceforge.net/download.html">这里</a>下载 <a href="http://sourceforge.net/projects/luabinaries/files/5.2.1/Executables/lua-5.2.1_Win64_bin.zip/download">lua-5.2.1_Win64_bin.zip</a> 和 <a href="http://sourceforge.net/projects/luabinaries/files/5.2.1/Windows%20Libraries/Dynamic/lua-5.2.1_Win64_dllw4_lib.zip/download">lua-5.2.1_Win64_dllw4_lib.zip</a> 这两个文件，解压到同一目录下。</p>
+
+<p><em>update (20130501)</em>：增加对 Tcl 的支持，版本为 <a href="http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.5.13.0/ActiveTcl8.5.13.0.296436-win32-x86_64-threaded.exe">ActiveTcl 8.5.13</a>。原本打算用 8.6 的，无奈编译不成功，原因不明。。。</p>
+
+<h4>3.VIM 源代码</h4>
+
+<p>在这里 <a href="ftp://ftp.vim.org/pub/vim/pc/">ftp://ftp.vim.org/pub/vim/pc/</a> 下载，当然是选
+7.3啦，找到 vim73_46rt.zip，vim73_46src.zip 这两个包，前一个是运行时文件后一个是源代码，从 7.3 开始语言文件已经打包进了runtime里。然后再到这里 <a href="ftp://ftp.vim.org/pub/vim/patches/7.3/">ftp://ftp.vim.org/pub/vim/patches/7.3/</a> 下载补丁。        <br/>
+不过这些补丁实在太多了（911 个！），下载起来实在有点麻烦。最开始想到用 Firefox的DownThemAll 扩展，不过不知为什么下载下来的文件名开头都多了个 2.3（记不太清，反正就是多了几个数字，不过现在想想其实也没什么影响 ←_←）。然后又想到在资源管理器打开再全选复制，不过速度实在慢的可以。最终 google 后选择了 wget，查了一下命令：</p>
+
+<p><code>
+$ wget -c -r -nd -np www.xxx.org/pub/path/
+</code></p>
+
+<p>-c：断点续传；-r：递归目录；-nd：递归是不创建各层目录直接下载到当前目录下；-np：递归时不搜索上层目录。             <br/>
+把vim73_46src.zip里的src 文件夹（其他的可有可无）解压到一个暂命名为 make 的目录下，把所有的补丁文件放到与 make 目录同级的 patches 文件夹里。打开 Cygwin，c d到 make 目录下(在 Cygwin 里的 /cygdrive 路径下可以找到系统里的各分区)，执行以下命令打补丁：</p>
+
+<p><code>
+$ for file in ../patches/7.3.*; do patch -Np0 -i $file; done   
+</code></p>
+
+<h2>二.开始编译</h2>
+
+<p>cd 到 src 文件夹下，执行以下编译命令：</p>
+
+<p><code>
+$ make -f Make_cyg.mak CC=x86_64-w64-mingw32-gcc RC=x86_64-w64-mingw32-windres ARCH=x86-64 PYTHON=/cygdrive/c/Python27 PYTHON_VER=27 DYNAMIC_PYTHON=yes PYTHON3=/cygdrive/c/Python33 PYTHON3_VER=33 DYNAMIC_PYTHON3=yes RUBY=/cygdrive/c/Ruby200_64 RUBY_VER=200 RUBY_VER_LONG=2.0.0 DYNAMIC_RUBY=yes LUA=/cygdrive/c/Lua52 LUA_VER=52 DYNAMIC_LUA=yes PERL=/cygdrive/c/Perl64 PERL_VER=516 DYNAMIC_PERL=yes TCL=/cygdrive/c/Tcl TCL_VER=85 DYNAMIC_TCL=yes -j5 GUI=yes STATIC_STDCPLUS=yes OLE=yes FEATURES=HUGE USERNAME=wenLiangcan USERDOMAIN=Cygwin
+</code></p>
+
+<p>*_VER 跟 *_VER_LONG 的区别是，前者使用不带“.”的版本号，如 200，而后者则需要，如 2.0.0。查看 Make_cyg.ma k文件可以发现，对 ruby 的支持编译需要通过版本号定位到 \$(RUBY)/lib/ruby/\$(RUBY_VER_LONG)/… 这样的路径下，所以对 ruby 使用的这个参数。    <br/>
+不使用 STATIC_STDCPLUS=yes 的话，gvim 运行时会需要 libstdc++-6.dll 跟 libgcc_s_sjlj-1.dll 这两个文件。        <br/>
+GUI=yes 就是编译 gvim，GUI=no 则编译 vim。         <br/>
+多字长跟 cscope 支持都是默认为 yes。       <br/>
+编译完成后，复制 src/ 下的 vim.exe，gvim.exe，install.exe，uninstal.exe，vimrun.exe 跟 GvimExt/ 下的 gvimext.dll（用来添加系统右键菜单的“Edit with Vim”） 还有 xxd/ 下的 xxd.exe到运行时目录下（由 vim73_46rt.zip 解压得到）就可以啦。如果需要安装，就在 cmd 里以管理员权限运行 install.exe。</p>
+
+<h2>三.查看成果</h2>
+
+<p>运行 vim/gvim ，执行命令：</p>
+
+<p><code>
+:version                        
+</code></p>
+
+<p><img src="https://dl.dropboxusercontent.com/s/j558p79x9rnx5cf/vim_version.jpg?token_hash=AAFQm5Bxld04uNOc_j4PaJ_ArAir2S0sI2FDMEEfpjAARA&amp;dl=1" alt="" /></p>
+
+<p>(￣一￣)y</p>
+
+<p>附上<a href="https://bitbucket.org/wenliangcan/win64-releases-of-vim-with-multiple-languages-surpport/downloads">下载</a></p>
+
+<h2>四.补充</h2>
+
+<p>1.中文系统下 cygwin 的 shell 也会自动支持中文，如果编译过程出现错误想要复制 google
+一下，英文关键词的搜索结果往往会更准确，所以我想把它改为英文提示，可以在 ~/.bashrc 里末尾加上：</p>
+
+<p><code>bash
+export LANG='en_US'                      
+export LC_ALL='en_US.GBK'                             
+</code></p>
+
+<p>2.编译后可以执行以下命令清理编译文件：</p>
+
+<p><code>
+$ make -f Make_cyg.mak clean
+</code></p>
+
+<h2>五.参考资料</h2>
+
+<ul>
+<li><a href="http://www.vimer.cn/2010/04/windows%E4%B8%8B%E7%BC%96%E8%AF%91vimgvim%E5%B9%B6%E5%8A%A0%E5%85%A5python2-6%E5%92%8C3-1%E6%94%AF%E6%8C%81.html">windows下编译vim(gvim)并加入python2.6和3.1支持</a></li>
+<li><a href="https://groups.google.com/forum/?fromgroups=#!topic/vim_dev/2_bsP-SfnRo">How to compile 64 bit with cygwin/mingw?</a></li>
+<li><a href="http://people.smu.edu/jrobinet/howto/compile-vim-on-windows.asp">Compiling Vim on Windows</a></li>
+<li><a href="http://www.joynb.net/blog/archives/973">[转载]本人在cygwin下完整工作环境的搭建(备忘)</a></li>
+<li><a href="http://blog.csdn.net/jianping_shen/article/details/6300638">eclipse+cdt+cygwin配置c/c++开发环境</a></li>
+<li><a href="http://5iwww.blog.51cto.com/856039/620831">使用wget递归下载某目录下的所有文件</a></li>
+<li><a href="http://blog.csdn.net/a221133/article/details/7043318">让cygwin使用英文shell界面</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

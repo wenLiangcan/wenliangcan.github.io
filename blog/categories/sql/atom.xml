@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: SQL | 尹良灿得闲]]></title>
+  <link href="http://wenLiangcan.github.io/blog/categories/sql/atom.xml" rel="self"/>
+  <link href="http://wenLiangcan.github.io/"/>
+  <updated>2013-10-18T20:41:36+08:00</updated>
+  <id>http://wenLiangcan.github.io/</id>
+  <author>
+    <name><![CDATA[wenLiangcan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[SQL：一次性插入多个元组]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/"/>
+    <updated>2013-04-24T19:21:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert</id>
+    <content type="html"><![CDATA[<p>书本上没有，在 StackOverflow 找到了，做一下笔记</p>
+
+<p><strong>句式一：</strong></p>
+
+<p><code>sql
+INSERT INTO 'tablename' ('column1', 'column2') VALUES         
+('data1', 'data2'),             
+('data3', 'data4'),                  
+('data5', 'data6'),               
+('data7', 'data8')
+</code>                      <br/>
+<strong>句式二：</strong></p>
+
+<p>```sql
+INSERT INTO 'tablename'</p>
+
+<pre><code>    SELECT 'data1' AS 'column1', 'data2' AS 'column2'      
+</code></pre>
+
+<p>UNION SELECT 'data3', 'data4'    <br/>
+UNION SELECT 'data5', 'data6'        <br/>
+UNION SELECT 'data7', 'data8'
+```</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Is it possible to insert multiple rows at a time in an SQLite database?</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
