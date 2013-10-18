@@ -1,0 +1,10 @@
+---
+layout: post
+title: "test"
+date: 2012-09-14 01:24
+comments: true
+categories: 
+---
+*Test*   
+**测试**   
+測試
