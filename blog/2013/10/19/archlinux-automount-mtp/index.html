@@ -315,7 +315,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这里包含了纯 MTP 模式 和 MTP，USB debug 模式同时打开时的规则，可以再手机切换到对应的模式通过上一步骤得到相关数据。  <br/>
+<p>这里包含了纯 MTP 模式 和 MTP，USB debug 模式同时打开时的规则，可以在手机切换到对应的模式通过上一步骤得到相关数据。  <br/>
 其中，第一部分里的 <code>ATTR{idVendor}</code> 对应 <code>ID_VENDOR_ID</code>，<code>ATTR{idProduct}</code> 对应 <code>ID_MODEL_ID</code>。</p>
 
 <p><code>ID_MODEL_ID</code> 除了这两种情况，在 PTP 模式，PTP 和 USB debug 模式，Bootloader 模式 还有 Recovery 模式都会有对应的数值，不过我尝试添加了 PTP 模式的规则后没能成功挂载，只好作罢。</p>

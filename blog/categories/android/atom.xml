@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2013-10-19T21:39:55+08:00</updated>
+  <updated>2013-10-19T21:42:04+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -137,7 +137,7 @@ ENV{ID_MODEL_ID}=="4ee2", ENV{ID_VENDOR_ID}=="18d1", ACTION=="remove", RUN+="/us
 <p>ENV{ID_MODEL_ID}=="4ee1", ENV{ID_VENDOR_ID}=="18d1", ACTION=="add", RUN+="/usr/bin/systemctl start 'android-mtp@$env{ID_MODEL}.service'"
 ENV{ID_MODEL_ID}=="4ee2", ENV{ID_VENDOR_ID}=="18d1", ACTION=="add", RUN+="/usr/bin/systemctl start 'android-mtp@$env{ID_MODEL}.service'"
 <code>`
-这里包含了纯 MTP 模式 和 MTP，USB debug 模式同时打开时的规则，可以再手机切换到对应的模式通过上一步骤得到相关数据。    
+这里包含了纯 MTP 模式 和 MTP，USB debug 模式同时打开时的规则，可以在手机切换到对应的模式通过上一步骤得到相关数据。    
 其中，第一部分里的</code>ATTR{idVendor}<code>对应</code>ID_VENDOR_ID<code>，</code>ATTR{idProduct}<code>对应</code>ID_MODEL_ID``。</p>
 
 <p><code>ID_MODEL_ID</code> 除了这两种情况，在 PTP 模式，PTP 和 USB debug 模式，Bootloader 模式 还有 Recovery 模式都会有对应的数值，不过我尝试添加了 PTP 模式的规则后没能成功挂载，只好作罢。</p>
