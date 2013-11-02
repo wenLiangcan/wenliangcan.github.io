@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2013-10-19T21:42:04+08:00</updated>
+  <updated>2013-11-02T20:27:01+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -26,7 +26,7 @@
 
 <p>首先是为你使用的设备添加相应的挂载规则。（默认的挂载规则已经加入了对 Nexus 7 一代，Galaxy Nexus 和 HP Touchpad 32GB 的支持，如果你使用的是这些设备可以跳过这一步。）</p>
 
-<p>通过 USB 先把设备连接到电脑，在终端里输入命令：
+<p>通过 USB 线把设备连接到电脑，在终端里输入命令：
 <code>bash
 $ udevadm monitor --environment --udev
 </code>
@@ -160,7 +160,7 @@ $ makepkg
 $ sudo pacman -U android-automount-0.1-1-any.pkg.tar.xz
 </code></p>
 
-<p>OK，现在连接你的 Android 设备到电脑上，看看 Arch 时不时成功挂载了呢~    <br/>
+<p>OK，现在连接你的 Android 设备到电脑上，看看 Arch 是不是成功挂载了呢~    <br/>
 如果需要断开连接，只需直接拔掉数据线就好，无需手动 unmount。</p>
 
 <h2>参考资料</h2>
