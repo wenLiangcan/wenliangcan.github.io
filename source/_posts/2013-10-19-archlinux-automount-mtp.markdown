@@ -13,7 +13,7 @@ categories: [Linux, Arch Linux, Android]
 ###一、
 首先是为你使用的设备添加相应的挂载规则。（默认的挂载规则已经加入了对 Nexus 7 一代，Galaxy Nexus 和 HP Touchpad 32GB 的支持，如果你使用的是这些设备可以跳过这一步。）     
 
-通过 USB 先把设备连接到电脑，在终端里输入命令：
+通过 USB 线把设备连接到电脑，在终端里输入命令：
 ```bash
 $ udevadm monitor --environment --udev
 ```
@@ -138,7 +138,7 @@ $ makepkg
 $ sudo pacman -U android-automount-0.1-1-any.pkg.tar.xz
 ```
 
-OK，现在连接你的 Android 设备到电脑上，看看 Arch 时不时成功挂载了呢~      
+OK，现在连接你的 Android 设备到电脑上，看看 Arch 是不是成功挂载了呢~      
 如果需要断开连接，只需直接拔掉数据线就好，无需手动 unmount。     
 
 ##参考资料
