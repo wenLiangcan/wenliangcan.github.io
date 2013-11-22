@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Arch Linux | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/arch-linux/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2013-11-04T22:55:56+08:00</updated>
+  <updated>2013-11-22T19:00:17+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Arch Linux 下搭建 MonoGame 开发环境]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux/"/>
+    <updated>2013-11-22T15:11:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux</id>
+    <content type="html"><![CDATA[<h4>其实就是安装几个包而已：</h4>
+
+<p><code>bash
+$ yaourt -S monodevelop-git monogame monodevelop-monogame-addin-git
+</code></p>
+
+<p>第一个是 IDE，<code>Extra</code> 仓库里的更新太慢了，还停留在 <code>4.0.13</code>，<code>MonoDevelop</code> 的稳定版现在是 <code>4.2.1</code>。</p>
+
+<p>最后那个是 <code>MonoDevelop</code> 的 <code>MonoGame</code> 插件，有了它才能在 <code>MonoDevelop</code> 里创建 <code>MonoGame</code> 的解决方案。话说这个当初把我给搞蒙了，看<a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux">教程</a>以为直接安装好 <code>MonoGame</code> 就可以了，看了 <a href="https://aur.archlinux.org/packages/monogame/"><code>aur</code></a> 里的评论才知道这么个东西。觉得维护者应该把它加到可选依赖里。</p>
+
+<h4>现在试着创建一个 Solution：</h4>
+
+<ul>
+<li>在菜单栏选择 File -> New -> Solution</li>
+<li><p>接着选择 C# -> MonoGame -> MonoGame Linux Application <br/>
+<img src="https://dl.dropboxusercontent.com/s/rw8l51u6es27pwi/new_solution.png?dl=1&amp;token_hash=AAGKLEegUiW1nYqUbM67-AX-ZorFtbwGqsFLOQb3U2efNg" alt="" /></p></li>
+<li><p>命名并保存 <br/>
+<img src="https://dl.dropboxusercontent.com/s/8mkdatzfftk49pw/monogame_sln.png?dl=1&amp;token_hash=AAFMSNjCaOBtuzZPYxjAW-_N_tSRdJ8V1gsLYn_0r1ARFw" alt="" /><br/>
+(编辑器的配色可以在 Edit -> Preferences -> Text Editor -> Syntax Highlighting 里设置)</p></li>
+<li><p>在编译运行应用前可以把第 23 行的 <code>graphics.IsFullScreen</code> 设为 <code>false</code>，全屏运行的话会带来一些不便。 <br/>
+<img src="https://dl.dropboxusercontent.com/s/l9ic9t3pwq8jifx/code.png?dl=1&amp;token_hash=AAGdbz1QdMFfZq232ndgEoiIzVujxXJDqRYi3q6r_VnKTg" alt="" /></p></li>
+<li><p>按 F5 或 选择菜单 Run -> Start Debugging 启动程序 <br/>
+<img src="https://dl.dropboxusercontent.com/s/rbk8w0vmc5c3upb/app.png?dl=1&amp;token_hash=AAGgKRA-3BdwOy2kQNBjvhP8f7w0DpNPzEU9PbwSSJ8jfg" alt="" /> <br/>
+不太有趣 _(:3」∠)_</p></li>
+</ul>
+
+
+<h4>为了体验最新的特性，还可以通过 <code>MonoDevelop</code> 的 <code>VersionControl</code> 插件下载最新的 <code>MonoGame</code> 代码用来创建应用：</h4>
+
+<p>详见：<a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux#wiki-Getting_and_Building_the_Latest_Sources_develop3d">Getting and Building the Latest Sources (develop3d)</a> 和 <a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux#wiki-Creating_a_MonoGame_Application_develop3d_version">Creating a MonoGame Application (develop3d version)</a></p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux">Tutorials:Getting Started Guide Linux</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Arch Linux 下自动挂载 MTP]]></title>

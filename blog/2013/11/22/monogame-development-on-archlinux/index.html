@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>test - 尹良灿得闲</title>
+  <title>Arch Linux 下搭建 MonoGame 开发环境 - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="Test 测试 測試
-">
+  <meta name="description" content="其实就是安装几个包而已： 1
+$ yaourt -S monodevelop-git monogame monodevelop-monogame-addin-git 第一个是 IDE，Extra 仓库里的更新太慢了，还停留在 4.0.13，MonoDevelop 的稳定版现在是 4.2.1。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2012/09/14/test">
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Test</h1>
+      <h1 class="entry-title">Arch Linux 下搭建 MonoGame 开发环境</h1>
     
     
       <p class="meta">
@@ -97,7 +97,7 @@
   
 
 
-<time datetime="2012-09-14T01:24:00+08:00" pubdate data-updated="true">Sep 14<span>th</span>, 2012</time>
+<time datetime="2013-11-22T15:11:00+08:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2013</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
@@ -107,9 +107,44 @@
   </header>
 
 
-<div class="entry-content"><p><em>Test</em> <br/>
-<strong>测试</strong> <br/>
-測試</p>
+<div class="entry-content"><h4>其实就是安装几个包而已：</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>yaourt -S monodevelop-git monogame monodevelop-monogame-addin-git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>第一个是 IDE，<code>Extra</code> 仓库里的更新太慢了，还停留在 <code>4.0.13</code>，<code>MonoDevelop</code> 的稳定版现在是 <code>4.2.1</code>。</p>
+
+<p>最后那个是 <code>MonoDevelop</code> 的 <code>MonoGame</code> 插件，有了它才能在 <code>MonoDevelop</code> 里创建 <code>MonoGame</code> 的解决方案。话说这个当初把我给搞蒙了，看<a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux">教程</a>以为直接安装好 <code>MonoGame</code> 就可以了，看了 <a href="https://aur.archlinux.org/packages/monogame/"><code>aur</code></a> 里的评论才知道这么个东西。觉得维护者应该把它加到可选依赖里。</p>
+
+<h4>现在试着创建一个 Solution：</h4>
+
+<ul>
+<li>在菜单栏选择 File -> New -> Solution</li>
+<li><p>接着选择 C# -> MonoGame -> MonoGame Linux Application <br/>
+<img src="https://dl.dropboxusercontent.com/s/rw8l51u6es27pwi/new_solution.png?dl=1&amp;token_hash=AAGKLEegUiW1nYqUbM67-AX-ZorFtbwGqsFLOQb3U2efNg" alt="" /></p></li>
+<li><p>命名并保存 <br/>
+<img src="https://dl.dropboxusercontent.com/s/8mkdatzfftk49pw/monogame_sln.png?dl=1&amp;token_hash=AAFMSNjCaOBtuzZPYxjAW-_N_tSRdJ8V1gsLYn_0r1ARFw" alt="" /><br/>
+(编辑器的配色可以在 Edit -> Preferences -> Text Editor -> Syntax Highlighting 里设置)</p></li>
+<li><p>在编译运行应用前可以把第 23 行的 <code>graphics.IsFullScreen</code> 设为 <code>false</code>，全屏运行的话会带来一些不便。 <br/>
+<img src="https://dl.dropboxusercontent.com/s/l9ic9t3pwq8jifx/code.png?dl=1&amp;token_hash=AAGdbz1QdMFfZq232ndgEoiIzVujxXJDqRYi3q6r_VnKTg" alt="" /></p></li>
+<li><p>按 F5 或 选择菜单 Run -> Start Debugging 启动程序 <br/>
+<img src="https://dl.dropboxusercontent.com/s/rbk8w0vmc5c3upb/app.png?dl=1&amp;token_hash=AAGgKRA-3BdwOy2kQNBjvhP8f7w0DpNPzEU9PbwSSJ8jfg" alt="" /> <br/>
+不太有趣 _(:3」∠)_</p></li>
+</ul>
+
+
+<h4>为了体验最新的特性，还可以通过 <code>MonoDevelop</code> 的 <code>VersionControl</code> 插件下载最新的 <code>MonoGame</code> 代码用来创建应用：</h4>
+
+<p>详见：<a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux#wiki-Getting_and_Building_the_Latest_Sources_develop3d">Getting and Building the Latest Sources (develop3d)</a> 和 <a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux#wiki-Creating_a_MonoGame_Application_develop3d_version">Creating a MonoGame Application (develop3d version)</a></p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="https://github.com/mono/MonoGame/wiki/Tutorials%3AGetting-Started-Guide-Linux">Tutorials:Getting Started Guide Linux</a></li>
+</ul>
+
 </div>
 
 
@@ -132,8 +167,14 @@
   
 
 
-<time datetime="2012-09-14T01:24:00+08:00" pubdate data-updated="true">Sep 14<span>th</span>, 2012</time>
+<time datetime="2013-11-22T15:11:00+08:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2013</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/arch-linux/'>Arch Linux</a>, <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/mono/'>Mono</a>, <a class='category' href='/blog/categories/monogame/'>MonoGame</a>
+  
+</span>
 
 
     </p>
@@ -168,7 +209,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2012/09/14/test/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2012/09/14/test/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -179,8 +220,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2013/10/19/archlinux-automount-mtp/" title="Previous Post: Arch Linux 下自动挂载 MTP">&laquo; Arch Linux 下自动挂载 MTP</a>
       
-        <a class="basic-alignment right" href="/blog/2013/04/21/vim-compilation/" title="Next Post: Windows下编译支持多种脚本语言的64位VIM(GVIM)">Windows下编译支持多种脚本语言的64位VIM(GVIM) &raquo;</a>
       
     </p>
   </footer>
@@ -267,8 +308,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2012/09/14/test/';
-        var disqus_url = 'http://wenLiangcan.github.io/blog/2012/09/14/test/';
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/11/22/monogame-development-on-archlinux/';
         var disqus_script = 'embed.js';
       
     (function () {
