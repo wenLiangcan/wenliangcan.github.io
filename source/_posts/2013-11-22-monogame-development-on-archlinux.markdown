@@ -3,7 +3,7 @@ layout: post
 title: "Arch Linux 下搭建 MonoGame 开发环境"
 date: 2013-11-22 15:11
 comments: true
-categories: [Arch Linux, C#, Mono, MonoGame]
+categories: [Linux, Arch Linux, C#, Mono, MonoGame]
 ---
 
 ####其实就是安装几个包而已：
