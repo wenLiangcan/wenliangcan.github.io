@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: DB - 尹良灿得闲</title>
+  <title>Linux 下浏览器里使用退格键返回上一页 - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="Category: DB">
+  <meta name="description" content="这里只针对 Firefox 和 Chrome，Linux 下它们默认都不能用退格键作为返回历史上一页的快捷键，Opera 倒是可以。 Firefox : 在 about:config 里查找到 &#8220;browser.backspace_action&#8221; 这一项，把它的值设置为 0 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.ioblog/categories/db">
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -76,36 +76,138 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: DB</h1>
+    
+      <h1 class="entry-title">Linux 下浏览器里使用退格键返回上一页</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-26T20:44:00+08:00" pubdate data-updated="true">Nov 26<span>th</span>, 2013</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>这里只针对 Firefox 和 Chrome，Linux 下它们默认都不能用退格键作为返回历史上一页的快捷键，Opera 倒是可以。</p>
 
-  
-  <h2>2013</h2>
+<p><strong><em>Firefox</em></strong> : <br/>
+在 about:config 里查找到 &#8220;browser.backspace_action&#8221;  这一项，把它的值设置为 0 就可以了。1 代表向上滚动页面（此时要向下滚动的话可以按 Shift 加退格键），我的 fx 默认被设为了 2，按退格键没任何反应。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/04/24/sql-multiple-row-insert/">SQL：一次性插入多个元组</a></h1>
-<time datetime="2013-04-24T19:21:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>24</span> <span class='year'>2013</span></time>
+<p><strong><em>Chrome</em></strong> : <br/>
+需要安装一个扩展，叫做 <a href="https://chrome.google.com/webstore/detail/aeffggjddcchloadflonilaahpclmbnm">Backspace As Back/Forward for Linux</a>。安装后在它的设置页勾选 &#8220;Activate Backspace for navigation in history object&#8221; 这一项，里面还可以设置例外，对某些网页不启用这一功能。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/db/'>DB</a>, <a class='category' href='/blog/categories/sql/'>SQL</a></span>
-</footer>
+<h2>参考资料</h2>
 
-
-</article>
+<ul>
+<li><a href="http://lifehacker.com/269945/set-backspaces-firefox-behavior">Set Backspace&#8217;s Firefox behavior</a></li>
+<li><a href="http://forum.ubuntu.com.cn/viewtopic.php?f=48&amp;t=349227">解决浏览器[←Backspace]键失灵的方法</a></li>
+</ul>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">wenLiangcan</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-26T20:44:00+08:00" pubdate data-updated="true">Nov 26<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/browser/'>Browser</a>, <a class='category' href='/blog/categories/chrome/'>Chrome</a>, <a class='category' href='/blog/categories/firefox/'>Firefox</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+	
+	  
+        
+            
+            
+        
+
+    
+
+
+
+
+        
+    
+
+
+
+
+
+<div class="cc-license">
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+        <img alt="Creative Commons Attribution-NonCommercial 3.0 Unported License" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" />
+    </a><br />
+    This work is licensed under a
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.
+</div>
+
+	
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/24/school-network-auto-login-by-python/" title="Previous Post: [Python] 校园网网页验证登录脚本">&laquo; [Python] 校园网网页验证登录脚本</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -184,7 +286,10 @@
       var disqus_shortname = 'wenLiangcan';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

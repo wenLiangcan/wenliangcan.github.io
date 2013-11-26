@@ -9,7 +9,7 @@
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="依旧毫无技术含量 =。=，走了很多弯路，很多原理也没深入学习，不过还是记录一下吧。。。 学校的校园网可谓关卡重重，先要锐捷验证一次，然后还要在网页端登录一次，如果一段时间没有网络活动的话又会自动下线（挂 Q 也会）。 之前写过一个自动填写验证码的小书签,后来改成了油猴脚本， &hellip;">
+  <meta name="description" content="这里只针对 Firefox 和 Chrome，Linux 下它们默认都不能用退格键作为返回历史上一页的快捷键，Opera 倒是可以。 Firefox : 在 about:config 里查找到 &#8220;browser.backspace_action&#8221; 这一项，把它的值设置为 0 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-26T20:44:00+08:00" pubdate data-updated="true">Nov 26<span>th</span>, 2013</time>
+        
+           | <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这里只针对 Firefox 和 Chrome，Linux 下它们默认都不能用退格键作为返回历史上一页的快捷键，Opera 倒是可以。</p>
+
+<p><strong><em>Firefox</em></strong> : <br/>
+在 about:config 里查找到 &#8220;browser.backspace_action&#8221;  这一项，把它的值设置为 0 就可以了。1 代表向上滚动页面（此时要向下滚动的话可以按 Shift 加退格键），我的 fx 默认被设为了 2，按退格键没任何反应。</p>
+
+<p><strong><em>Chrome</em></strong> : <br/>
+需要安装一个扩展，叫做 <a href="https://chrome.google.com/webstore/detail/aeffggjddcchloadflonilaahpclmbnm">Backspace As Back/Forward for Linux</a>。安装后在它的设置页勾选 &#8220;Activate Backspace for navigation in history object&#8221; 这一项，里面还可以设置例外，对某些网页不启用这一功能。</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="http://lifehacker.com/269945/set-backspaces-firefox-behavior">Set Backspace&#8217;s Firefox behavior</a></li>
+<li><a href="http://forum.ubuntu.com.cn/viewtopic.php?f=48&amp;t=349227">解决浏览器[←Backspace]键失灵的方法</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1073,10 +1126,13 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
   <ul id="categories">
     <li class='category'><a href='/blog/categories/android/'>Android (1)</a></li>
 <li class='category'><a href='/blog/categories/arch-linux/'>Arch Linux (2)</a></li>
+<li class='category'><a href='/blog/categories/browser/'>Browser (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>C# (1)</a></li>
+<li class='category'><a href='/blog/categories/chrome/'>Chrome (1)</a></li>
 <li class='category'><a href='/blog/categories/db/'>DB (1)</a></li>
+<li class='category'><a href='/blog/categories/firefox/'>Firefox (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>Linux (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>Linux (3)</a></li>
 <li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
 <li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (2)</a></li>
@@ -1087,6 +1143,10 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/24/school-network-auto-login-by-python/">[Python] 校园网网页验证登录脚本</a>
@@ -1102,10 +1162,6 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
     
       <li class="post">
         <a href="/blog/2013/10/18/correct-image-file-extension/">修正图片文件扩展名的 Python 脚本</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/30/iframe-dom/">JS 操作 Iframe 非跨域引用页面的DOM</a>
       </li>
     
   </ul>
