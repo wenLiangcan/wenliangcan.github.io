@@ -9,7 +9,7 @@
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="这里只针对 Firefox 和 Chrome，Linux 下它们默认都不能用退格键作为返回历史上一页的快捷键，Opera 倒是可以。 Firefox : 在 about:config 里查找到 &#8220;browser.backspace_action&#8221; 这一项，把它的值设置为 0 &hellip;">
+  <meta name="description" content="今天我的 N7 二代终于收到 OTA 了，升级后又要重新获取 Root 权限，之前这些工作一直用 Windows 下的 Nexus Root Toolkit 完成，现在尝试在 Linux 下解决。 之所以升级后 Root 权限没了，是因为 su 文件被移除了，所以现在只需要重刷一次 SuperSU &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,102 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/">Nexus 7 升级 4.4 KitKat 后重新提权</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-27T14:33:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
+        
+           | <a href="/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天我的 N7 二代终于收到 OTA 了，升级后又要重新获取 Root 权限，之前这些工作一直用 Windows 下的 <a href="http://www.wugfresh.com/nrt/%E2%80%8E">Nexus Root Toolkit</a> 完成，现在尝试在 Linux 下解决。</p>
+
+<p>之所以升级后 Root 权限没了，是因为 su 文件被移除了，所以现在只需要重刷一次 <a href="http://forum.xda-developers.com/showthread.php?t=1538053">SuperSU</a> 的升级包。刷升级包需要第三方 Recovery，之前 Root 机子时并没有把它直接刷进机器里，而是采用临时启动的方式，现在也用这个方法。</p>
+
+<ul>
+<li>先要确保电脑上有 adb 和 fastboot， Arch 下可以安装 aur 上的 <a href="https://aur.archlinux.org/packages/android-sdk-platform-tools/">android-sdk-platform-tools</a> 包。</li>
+<li>然后下载 SuperSU 的<a href="http://download.chainfire.eu/supersu">升级包</a> 和 <a href="http://techerrata.com/browse/twrp2/flo">TWRP</a>。</li>
+<li>通过 USB 数据线连接设备到电脑。</li>
+<li>把 SuperSU 升级包直接复制到 N7 上，选一个方便找到的路径。</li>
+<li>打开终端，cd 到 Recovery 镜像所在的目录。</li>
+<li>使用 adb 重启到 BootLoader：</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>adb reboot-bootloader
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<ul>
+<li>出现 BootLoader 介面后先看看设备能否被识别：</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>fastboot devices
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<ul>
+<li>没问题的话就可以启动镜像了：</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>fastboot boot ./openrecovery-twrp-2.6.3.1-flo.img
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<ul>
+<li>成功进入 TWRP 后点 Install，选择 SuperSU 升级包，刷之。返回主介面，Reboot -> System，OK !</li>
+</ul>
+
+
+<p>ps : <br/>
+之前之所以不刷入 Recovery，是因为那时的 TWRP 还不支持 N7 二代的分辨率，整个介面缩在了一边，所以其实是刷过一次觉得很难看又删掉了 ╮(￣▽￣&#8221;)╭ 。这次倒是发现已经支持了，不过不想刷了，觉得没必要，想要尽量保持机子的纯净。</p>
+
+<p>刚刚才知道，原来 SuperSU 设置里有一个 叫 Survival mode 的功能，就是用来防止系统 OTA 更新后权限丢失的。不过不能保证百分百有效而且是付费版才能用，我倒是装了个网上找的 key，这次把它勾上，期待下次更新，看有没有效 o((≧▽≦o)</p>
+
+<h2>参考资料</h2>
+
+<p>一个<a href="http://kuai.xunlei.com/d/rMTXArBp8JmbUQQA5c0">刷机包</a>里的批处理文件，来自<a href="http://blog.sina.com.cn/s/blog_0058222c0101cddg.html">a860官方和临时Recovery互刷工具</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1124,7 +1220,7 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 </section><section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/android/'>Android (1)</a></li>
+    <li class='category'><a href='/blog/categories/android/'>Android (2)</a></li>
 <li class='category'><a href='/blog/categories/arch-linux/'>Arch Linux (2)</a></li>
 <li class='category'><a href='/blog/categories/browser/'>Browser (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>C# (1)</a></li>
@@ -1132,7 +1228,7 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 <li class='category'><a href='/blog/categories/db/'>DB (1)</a></li>
 <li class='category'><a href='/blog/categories/firefox/'>Firefox (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>Linux (3)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>Linux (4)</a></li>
 <li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
 <li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (2)</a></li>
@@ -1143,6 +1239,10 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/">Nexus 7 升级 4.4 KitKat 后重新提权</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a>
@@ -1158,10 +1258,6 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
     
       <li class="post">
         <a href="/blog/2013/10/19/archlinux-automount-mtp/">Arch Linux 下自动挂载 MTP</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/18/correct-image-file-extension/">修正图片文件扩展名的 Python 脚本</a>
       </li>
     
   </ul>
