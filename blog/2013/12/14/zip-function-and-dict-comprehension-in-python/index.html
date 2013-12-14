@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>zip 函数和 Dict Comprehension - 尹良灿得闲</title>
+  <meta name="author" content="wenLiangcan">
+
+  
+  <meta name="description" content="要下载某个会反盗图的网站上的图片，想到了这篇 Google 的图片代理。 通过 Google 来抓取想要的图片就可以逃过反盗图了，主要的工作就是为一系列原图的 url 生成特定的请求链接，所以要做的就是拼凑字符串，机械的任务当然交给机器去做了，Python 实现之。 虽然听起来挺简单， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/12/14/zip-function-and-dict-comprehension-in-python">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40394985-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">尹良灿得闲</a></h1>
+  
+    <h2>巴甫洛夫很忙……巴甫洛夫正在死亡</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/wenLiangcan" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:wenLiangcan.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Zip 函数和 Dict Comprehension</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-14T16:43:00+08:00" pubdate data-updated="true">Dec 14<span>th</span>, 2013</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>要下载某个会反盗图的网站上的图片，想到了这篇 <a href="http://qixinglu.com/post/google_image_proxy.html">Google 的图片代理</a>。</p>
+
+<p>通过 Google 来抓取想要的图片就可以逃过反盗图了，主要的工作就是为一系列原图的 url 生成特定的请求链接，所以要做的就是拼凑字符串，机械的任务当然交给机器去做了，<code>Python</code> 实现之。</p>
+
+<p>虽然听起来挺简单，可是以我原有的知识实现起来还是有些繁琐。 需要处理的数据是存储在一个列表里的原图链接，最终想要获得的数据是一系列的文件名和与之一一对应的下载链接，第一反应当然是用字典组织它们了。 请求地址是从原链接拼凑生成的，文件名也是由原链接获得，使用 <code>os.path.basename()</code> 方法。</p>
+
+<p>开始的想法是用两次 <code>List Comprehension</code>，遍历存储原链接的列表，获得两个分别含有文件名和下载地址的新列表，可是怎么把它们分别作为 <code>Key</code> 和 <code>Value</code> 合成为一个字典呢？我可不要循环操作下标。。。。Google 之，知道了 <code>zip</code> 函数，用法如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">dictionary</span>
+</span><span class='line'><span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <br/>
+<code>zip()</code> 会返回一系列的元组，然后通过 <code>dct()</code> 生成一个字典。</p>
+
+<p>可是两次遍历的都是同一个列表，难道就不能在同一次遍历中完成上面的任务吗 (&#8220;▔□▔)，好吧，原来还有 <a href="http://www.python.org/dev/peps/pep-0274/"><code>Dict Comprehension</code></a> 这个东西：</p>
+
+<ul>
+<li>如果需要遍历的 <code>sequence</code> 是一个列表，那么</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">l</span> <span class="p">:</span> <span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>如果 <code>sequence</code> 是一个字典</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>另外，在 2.6 及一下的 <code>Python</code> 中，需要使用 <code>dict</code> 构造函数</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">...</span> <span class="k">for</span> <span class="o">...</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>再复习一下如何用 <code>for in</code> 迭代一个字典分别获取其中的键和值：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 <code>Python 3.x</code> 中使用的是 <code>items()</code>, <code>Python 2.x</code> 中也有这个方法，不过返回的是包含一对键、值的元组。</p>
+
+<p>最后，贴一下代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/python</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">urllib2</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">inputlinks</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">links</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter links :</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;-i&quot;</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">links</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">links</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">links</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">links</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">prefix</span> <span class="o">=</span> <span class="s">r&quot;https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy?url=&quot;</span>
+</span><span class='line'>    <span class="n">suffix</span> <span class="o">=</span> <span class="s">r&quot;&amp;container=focus&amp;gadget=a&amp;no_expand=1&amp;resize_h=0&amp;rewriteMime=image</span><span class="si">%2F</span><span class="s">*&quot;</span>
+</span><span class='line'>    <span class="n">images</span> <span class="o">=</span> <span class="p">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="n">suffix</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">links</span><span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">images</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+</span><span class='line'>        <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">imgdata</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span class='line'>            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">imgdata</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">except</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">print</span> <span class="s">&quot;Er...&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">download</span><span class="p">(</span><span class="n">generate</span><span class="p">(</span><span class="n">inputlinks</span><span class="p">()))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="http://stackoverflow.com/a/4028894/1436873">How do I download a zip file in python using urllib2?</a></li>
+<li><a href="http://www.cnblogs.com/cacique/archive/2012/08/02/2617440.html">Python文件读写</a></li>
+<li><a href="http://stackoverflow.com/a/209854/1436873">Map two lists into a dictionary in Python</a></li>
+<li><a href="http://stackoverflow.com/a/1747827/1436873">Python: create a dictionary with list comprehension</a></li>
+<li><a href="http://www.python.org/dev/peps/pep-0274/">PEP 274 &#8211; Dict Comprehensions</a></li>
+<li><a href="http://stackoverflow.com/a/3294899/1436873">Iterating over Dictionaries…For Loops in Python</a></li>
+<li><a href="http://qixinglu.com/post/google_image_proxy.html">Google 的图片代理</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">wenLiangcan</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-14T16:43:00+08:00" pubdate data-updated="true">Dec 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/images/'>Images</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+	
+	  
+        
+            
+            
+        
+
+    
+
+
+
+
+        
+    
+
+
+
+
+
+<div class="cc-license">
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+        <img alt="Creative Commons Attribution-NonCommercial 3.0 Unported License" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" />
+    </a><br />
+    This work is licensed under a
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.
+</div>
+
+	
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/" title="Previous Post: Nexus 7 升级 4.4 KitKat 后重新提权">&laquo; Nexus 7 升级 4.4 KitKat 后重新提权</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    ﻿<section>
+  <h1>About Me</h1>
+  <p>我是尹良灿</p>
+  <p>闲人一个</p>
+  <p>这是我的学习笔记</p>
+</section><section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/android/'>Android (2)</a></li>
+<li class='category'><a href='/blog/categories/arch-linux/'>Arch Linux (2)</a></li>
+<li class='category'><a href='/blog/categories/browser/'>Browser (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>C# (1)</a></li>
+<li class='category'><a href='/blog/categories/chrome/'>Chrome (1)</a></li>
+<li class='category'><a href='/blog/categories/db/'>DB (1)</a></li>
+<li class='category'><a href='/blog/categories/firefox/'>Firefox (1)</a></li>
+<li class='category'><a href='/blog/categories/images/'>Images (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>Linux (4)</a></li>
+<li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
+<li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (3)</a></li>
+<li class='category'><a href='/blog/categories/sql/'>SQL (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>Vim (1)</a></li>
+
+  </ul>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/">Zip 函数和 Dict Comprehension</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/">Nexus 7 升级 4.4 KitKat 后重新提权</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/24/school-network-auto-login-by-python/">[Python] 校园网网页验证登录脚本</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/22/monogame-development-on-archlinux/">Arch Linux 下搭建 MonoGame 开发环境</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - wenLiangcan -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'wenLiangcan';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

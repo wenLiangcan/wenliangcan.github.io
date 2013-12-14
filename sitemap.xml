@@ -47,12 +47,18 @@
         <lastmod>2013-12-12T12:28:03+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://wenLiangcan.github.io/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/
+        </loc>
+        <lastmod>2013-12-14T18:24:09+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://wenLiangcan.github.io/blog/archives/</loc>
-        <lastmod>2013-12-12T12:28:03+08:00</lastmod>
+        <lastmod>2013-12-14T18:24:09+08:00</lastmod>
     </url>
     <url>
         <loc>http://wenLiangcan.github.io/</loc>
-        <lastmod>2013-12-12T12:28:03+08:00</lastmod>
+        <lastmod>2013-12-14T18:24:09+08:00</lastmod>
     </url>
     <url>
         <loc>http://wenLiangcan.github.io/robots.txt</loc>
