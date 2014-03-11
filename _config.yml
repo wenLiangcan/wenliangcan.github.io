@@ -81,7 +81,7 @@ googleplus_user:
 googleplus_hidden: false
 
 # Pinboard
-pinboard_user:
+pinboard_user: wheely
 pinboard_count: 3
 
 # Delicious
