@@ -39,7 +39,12 @@ function Pinboard_Linkroll() {
     if (!it.d) { return; }
     str += "<p><a class=\"pin-title\" href=\"" + this.cook(it.u) + "\">" + this.cook(it.d) + "</a>";
     if (it.n) {
-      str += "<span class=\"pin-description\">" + this.cook(it.n) + "</span>\n";
+      var max = 250;
+      var desc = this.cook(it.n);
+      if (desc.length > max) {
+        desc = desc.slice(0, max) + '...';
+      }
+      str += "<span class=\"pin-description\">" + desc + "</span>\n";
     }
     if (it.t.length > 0) {
       for (var i = 0; i < it.t.length; i++) {
