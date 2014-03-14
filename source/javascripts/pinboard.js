@@ -37,7 +37,7 @@ function Pinboard_Linkroll() {
   this.format_item = function(it) {
     var str = "<li class=\"pin-item\">";
     if (!it.d) { return; }
-    str += "<p><a class=\"pin-title\" style=\"text-decoration:none;\" href=\"" + this.cook(it.u) + "\">" + '<img style=\"border:none;\" src="https://plus.google.com/_/favicon?domain=' + this.cook(it.u).split(/\/+/g)[1] + '" /> ' + this.cook(it.d) + "</a>";
+    str += "<p><a class=\"pin-title\" style=\"text-decoration:none;\" target=\"_blank\" href=\"" + this.cook(it.u) + "\">" + '<img style=\"border:none;\" src="https://plus.google.com/_/favicon?domain=' + this.cook(it.u).split(/\/+/g)[1] + '" /> ' + this.cook(it.d) + "</a>";
     if (it.n) {
       var max = 250;
       var desc = this.cook(it.n);
