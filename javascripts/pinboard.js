@@ -49,7 +49,7 @@ function Pinboard_Linkroll() {
     if (it.t.length > 0) {
       for (var i = 0; i < it.t.length; i++) {
         var tag = it.t[i];
-        str += " <a class=\"pin-tag\" href=\"https://pinboard.in/u:"+ this.cook(it.a) + "/t:" + this.cook(tag) + "\">" + this.cook(tag).replace(/^\s+|\s+$/g, '') + "</a> ";
+        str += " <a class=\"pin-tag\" target=\"_blank\" href=\"https://pinboard.in/u:"+ this.cook(it.a) + "/t:" + this.cook(tag) + "\">" + this.cook(tag).replace(/^\s+|\s+$/g, '') + "</a> ";
       }
     }
     str += "</p></li>\n";
