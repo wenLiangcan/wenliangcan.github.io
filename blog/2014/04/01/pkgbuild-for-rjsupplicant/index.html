@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: C# - 尹良灿得闲</title>
+  <title>Linux 版锐捷客户端的 PKGBUILD - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="Category: C#">
+  <meta name="description" content="在愚人节的今天，学校全面强制使用 4.99 版本的锐捷客户端作为上网认证，之前一直在 Arch 下默默辛勤工作的 MentoHUST 就这样挂掉了。。。 锐捷其实也有 Linux 版的，叫做 rjsupplicant，试了一下居然能用，不用离开 Linux 回到 Windows 算是万幸， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.ioblog/categories/c-number">
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -76,36 +76,145 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: C#</h1>
+    
+      <h1 class="entry-title">Linux 版锐捷客户端的 PKGBUILD</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-01T19:58:00+08:00" pubdate data-updated="true">Apr 1<span>st</span>, 2014</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>在愚人节的今天，学校全面强制使用 4.99 版本的锐捷客户端作为上网认证，之前一直在 Arch 下默默辛勤工作的 <a href="https://code.google.com/p/mentohust/">MentoHUST</a> 就这样挂掉了。。。</p>
 
-  
-  <h2>2013</h2>
+<p>锐捷其实也有 Linux 版的，叫做 rjsupplicant，试了一下居然能用，不用离开 Linux 回到 Windows 算是万幸，不过不出所料的无法开多网卡建 WiFi 热点了，也只好如此。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/11/22/monogame-development-on-archlinux/">Arch Linux 下搭建 MonoGame 开发环境</a></h1>
-<time datetime="2013-11-22T15:11:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>22</span> <span class='year'>2013</span></time>
+<p>自从学了一下下 PKGBUILD 怎么写，无论多小的程序或脚本，不用 <code>Pacman</code> 管理就不舒服，所以这次也打了个包，文件都在<a href="https://github.com/wenLiangcan/PKGBUILD/tree/master/rjsupplicant">这里</a>。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/arch-linux/'>Arch Linux</a>, <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>, <a class='category' href='/blog/categories/mono/'>Mono</a>, <a class='category' href='/blog/categories/monogame/'>MonoGame</a></span>
-</footer>
+<p>安装好后输入 <code>rjsupplicant --help</code> 查看帮助，我的认证格式如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo rjsupplicant -a1 -d0 -nenp2s0 -u&lt;用户名&gt; -p&lt;密码&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<ul>
+<li>-a:   1 的话表示有线连接，0 就是无线</li>
+<li>-d:   1 使用 dhcp，0 不使用</li>
+<li>-n:   网卡名</li>
+</ul>
 
+
+<p>推出可以按 <code>q</code>。</p>
+
+<p>打包里还有个 <code>Systemd</code> 的 service 文件，从 <code>AUR</code> 上的 <a href="https://aur.archlinux.org/packages/mentohust-bin/">mentohust-bin</a> 里修改而来。安装好后如果要启用，先打开 <code>/usr/lib/systemd/system/rjsupplicant.service</code>，在<a href="https://github.com/wenLiangcan/PKGBUILD/blob/master/rjsupplicant/rjsupplicant.service#L10">第 10 行</a>添加上上述的认证参数，想在 <code>makepkg</code> 前添加的话请记得更新 <code>PKGBUILD</code> 里对应的 <code>md5sum</code> 值。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">wenLiangcan</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-01T19:58:00+08:00" pubdate data-updated="true">Apr 1<span>st</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/arch-linux/'>Arch Linux</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+	
+	  
+        
+            
+            
+        
+
+    
+
+
+
+
+        
+    
+
+
+
+
+
+<div class="cc-license">
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+        <img alt="Creative Commons Attribution-NonCommercial 3.0 Unported License" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" />
+    </a><br />
+    This work is licensed under a
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.
+</div>
+
+	
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/" title="Previous Post: zip 函数和 Dict Comprehension">&laquo; zip 函数和 Dict Comprehension</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -203,7 +312,10 @@
       var disqus_shortname = 'wenLiangcan';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

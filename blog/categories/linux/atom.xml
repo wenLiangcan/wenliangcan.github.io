@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-03-14T14:37:32+08:00</updated>
+  <updated>2014-04-01T20:56:40+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 版锐捷客户端的 PKGBUILD]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant/"/>
+    <updated>2014-04-01T19:58:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2014/04/01/pkgbuild-for-rjsupplicant</id>
+    <content type="html"><![CDATA[<p>在愚人节的今天，学校全面强制使用 4.99 版本的锐捷客户端作为上网认证，之前一直在 Arch 下默默辛勤工作的 <a href="https://code.google.com/p/mentohust/">MentoHUST</a> 就这样挂掉了。。。</p>
+
+<p>锐捷其实也有 Linux 版的，叫做 rjsupplicant，试了一下居然能用，不用离开 Linux 回到 Windows 算是万幸，不过不出所料的无法开多网卡建 WiFi 热点了，也只好如此。</p>
+
+<p>自从学了一下下 PKGBUILD 怎么写，无论多小的程序或脚本，不用 <code>Pacman</code> 管理就不舒服，所以这次也打了个包，文件都在<a href="https://github.com/wenLiangcan/PKGBUILD/tree/master/rjsupplicant">这里</a>。</p>
+
+<p>安装好后输入 <code>rjsupplicant --help</code> 查看帮助，我的认证格式如下：
+<code>
+sudo rjsupplicant -a1 -d0 -nenp2s0 -u&lt;用户名&gt; -p&lt;密码&gt;
+</code></p>
+
+<ul>
+<li>-a:   1 的话表示有线连接，0 就是无线</li>
+<li>-d:   1 使用 dhcp，0 不使用</li>
+<li>-n:   网卡名</li>
+</ul>
+
+
+<p>推出可以按 <code>q</code>。</p>
+
+<p>打包里还有个 <code>Systemd</code> 的 service 文件，从 <code>AUR</code> 上的 <a href="https://aur.archlinux.org/packages/mentohust-bin/">mentohust-bin</a> 里修改而来。安装好后如果要启用，先打开 <code>/usr/lib/systemd/system/rjsupplicant.service</code>，在<a href="https://github.com/wenLiangcan/PKGBUILD/blob/master/rjsupplicant/rjsupplicant.service#L10">第 10 行</a>添加上上述的认证参数，想在 <code>makepkg</code> 前添加的话请记得更新 <code>PKGBUILD</code> 里对应的 <code>md5sum</code> 值。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nexus 7 升级 4.4 KitKat 后重新提权]]></title>
