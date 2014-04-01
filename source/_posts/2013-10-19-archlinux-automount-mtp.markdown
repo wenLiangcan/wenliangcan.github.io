@@ -146,7 +146,7 @@ OK，现在连接你的 Android 设备到电脑上，看看 Arch 是不是成功
 
 
 
-[mtpwiki]:http://en.wikipedia.org/wiki/Media_Transfer_Protocol
+[mtpwiki]: http://en.wikipedia.org/wiki/Media_Transfer_Protocol
 [ptpwiki]: http://en.wikipedia.org/wiki/Picture_Transfer_Protocol
 [pkgbuild]: https://github.com/fxthomas/android-automount
 [download]: https://github.com/fxthomas/android-automount/archive/master.zip
