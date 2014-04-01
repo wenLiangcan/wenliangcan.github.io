@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-04-01T20:56:40+08:00</updated>
+  <updated>2014-04-01T21:09:34+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -139,7 +139,7 @@ return images
 
 <p>所以就想看看能不能用 <code>Python</code> 来实现这个功能了。</p>
 
-<p>因为对这一切都毫无概念，所以一开始只能用固有的思维方式考虑问题： 不通过浏览器，就是要用其它语言实现填写文本框然后按确认？或者通过其它语言间接调用 <code>Javascript</code> ？ 导致在这个上面绕了好久，看了半天 <a href="http://code.google.com/p/pyv8/"><code>Pyv8</code></a>, <a href="http://code.google.com/p/python-spidermonkey/"><code>Python-Spidermonkey</code></a> 什么的也没弄懂怎么回事 T<sup>T</sup></p>
+<p>因为对这一切都毫无概念，所以一开始只能用固有的思维方式考虑问题： 不通过浏览器，就是要用其它语言实现填写文本框然后按确认？或者通过其它语言间接调用 <code>Javascript</code> ？ 导致在这个上面绕了好久，看了半天 <a href="http://code.google.com/p/pyv8/"><code>Pyv8</code></a>, <a href="http://code.google.com/p/python-spidermonkey/"><code>Python-Spidermonkey</code></a> 什么的也没弄懂怎么回事 T^T</p>
 
 <p>其实填写文本框然后按确认按钮的过程就是填写一个表单（<code>&lt;form&gt;</code>），然后浏览器把表单中的数据提交到相应服务器的过程。而 <code>Python</code> 或者其它的一些语言都已经有相应的库提供 post/submit 网页表单数据的方法了。所以现在需要做的就是找出 提交数据的地址 和 需要提交的数据项，然后使用对应的方法提交数据。</p>
 
