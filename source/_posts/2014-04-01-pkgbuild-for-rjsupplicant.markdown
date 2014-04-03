@@ -21,7 +21,7 @@ sudo rjsupplicant -a1 -d0 -nenp2s0 -u<用户名> -p<密码>
 - -d:   1 使用 dhcp，0 不使用
 - -n:   网卡名
 
-推出可以按 `q`。   
+退出可以按 `q`。   
 
 打包里还有个 `Systemd` 的 service 文件，从 `AUR` 上的 [mentohust-bin][aur] 里修改而来。安装好后如果要启用，先打开 `/usr/lib/systemd/system/rjsupplicant.service`，在[第 10 行][service]添加上上述的认证参数，想在 `makepkg` 前添加的话请记得更新 `PKGBUILD` 里对应的 `md5sum` 值。
 
