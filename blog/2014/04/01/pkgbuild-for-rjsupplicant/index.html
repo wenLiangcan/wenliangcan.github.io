@@ -125,7 +125,7 @@
 </ul>
 
 
-<p>推出可以按 <code>q</code>。</p>
+<p>退出可以按 <code>q</code>。</p>
 
 <p>打包里还有个 <code>Systemd</code> 的 service 文件，从 <code>AUR</code> 上的 <a href="https://aur.archlinux.org/packages/mentohust-bin/">mentohust-bin</a> 里修改而来。安装好后如果要启用，先打开 <code>/usr/lib/systemd/system/rjsupplicant.service</code>，在<a href="https://github.com/wenLiangcan/PKGBUILD/blob/master/rjsupplicant/rjsupplicant.service#L10">第 10 行</a>添加上上述的认证参数，想在 <code>makepkg</code> 前添加的话请记得更新 <code>PKGBUILD</code> 里对应的 <code>md5sum</code> 值。</p>
 </div>
