@@ -9,9 +9,13 @@
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="想要玩一下 VimIRC.vim 这款插件，不过这货竟然是 Perl 写的，而我用的 vim 没有加入 Perl 支持，所以想不如试试编译一个支持多种脚本语言的 vim Vim版本：7.3.905
-需要支持的语言：Python2/3， Ruby， Perl， Lua， Tcl
-编译环境： &hellip;">
+  <meta name="description" content="书本上没有，在 StackOverflow 找到了，做一下笔记 句式一： 1
+2
+3
+4
+5
+INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
+(&#39;data1&#39;, &#39; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +83,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/sql-multiple-row-insert/">SQL：一次性插入多个元组</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+           | <a href="/blog/2013/04/24/sql-multiple-row-insert/#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>书本上没有，在 StackOverflow 找到了，做一下笔记</p>
+
+<p><strong>句式一：</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span> <span class="p">(</span><span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;column2&#39;</span><span class="p">)</span> <span class="k">VALUES</span>
+</span><span class='line'><span class="p">(</span><span class="s1">&#39;data1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span><span class="p">),</span>
+</span><span class='line'><span class="p">(</span><span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span><span class="p">),</span>
+</span><span class='line'><span class="p">(</span><span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span><span class="p">),</span>
+</span><span class='line'><span class="p">(</span><span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>                      <br/>
+<strong>句式二：</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span>
+</span><span class='line'>      <span class="k">SELECT</span> <span class="s1">&#39;data1&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column2&#39;</span>
+</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span>
+</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span>
+</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Is it possible to insert multiple rows at a time in an SQLite database?</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -296,7 +379,7 @@
 <li class='category'><a href='/blog/categories/firefox/'>Firefox (1)</a></li>
 <li class='category'><a href='/blog/categories/images/'>Images (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>Linux (5)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>Linux (6)</a></li>
 <li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
 <li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (3)</a></li>
@@ -307,6 +390,10 @@
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/20/keepass-cjk-fonts-diplaying/">解决 Linux 下 KeePass 中文显示的问题</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/01/pkgbuild-for-rjsupplicant/">Linux 版锐捷客户端的 PKGBUILD</a>
@@ -322,10 +409,6 @@
     
       <li class="post">
         <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/24/school-network-auto-login-by-python/">[Python] 校园网网页验证登录脚本</a>
       </li>
     
   </ul>

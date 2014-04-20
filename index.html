@@ -9,7 +9,7 @@
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="在愚人节的今天，学校全面强制使用 4.99 版本的锐捷客户端作为上网认证，之前一直在 Arch 下默默辛勤工作的 MentoHUST 就这样挂掉了。。。 锐捷其实也有 Linux 版的，叫做 rjsupplicant，试了一下居然能用，不用离开 Linux 回到 Windows 算是万幸， &hellip;">
+  <meta name="description" content="Linux 下用 KeePass 中文一直以来都显示为方块，准确的说是点开编辑条目的时候，外面的列表显示倒没有问题，弄得我一直不敢在 Linux 下编辑我的数据文件，每次想要添加新帐号都得开个虚拟机。。。 突然发现原来是 Local 设置的问题，因为我习惯使用英文作为系统语言，所以只要让 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/20/keepass-cjk-fonts-diplaying/">解决 Linux 下 KeePass 中文显示的问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-20T23:05:00+08:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/04/20/keepass-cjk-fonts-diplaying/#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io/blog/2014/04/20/keepass-cjk-fonts-diplaying/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Linux 下用 KeePass 中文一直以来都显示为方块，准确的说是点开编辑条目的时候，外面的列表显示倒没有问题，弄得我一直不敢在 Linux 下编辑我的数据文件，每次想要添加新帐号都得开个虚拟机。。。</p>
+
+<p>突然发现原来是 Local 设置的问题，因为我习惯使用英文作为系统语言，所以只要让 KeePass 使用中文 Local 运行就好了。比如 Arch 下安装的官方源里的包的话，在 <code>/usr/bin/keepass</code> 里加入：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">LANG</span><span class="o">=</span>zh_CN.utf8
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1186,85 +1232,6 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/sql-multiple-row-insert/">SQL：一次性插入多个元组</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-           | <a href="/blog/2013/04/24/sql-multiple-row-insert/#disqus_thread"
-             data-disqus-identifier="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>书本上没有，在 StackOverflow 找到了，做一下笔记</p>
-
-<p><strong>句式一：</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span> <span class="p">(</span><span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;column2&#39;</span><span class="p">)</span> <span class="k">VALUES</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>                      <br/>
-<strong>句式二：</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span>
-</span><span class='line'>      <span class="k">SELECT</span> <span class="s1">&#39;data1&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column2&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h2>参考资料</h2>
-
-<ul>
-<li><a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Is it possible to insert multiple rows at a time in an SQLite database?</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1292,7 +1259,7 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 <li class='category'><a href='/blog/categories/firefox/'>Firefox (1)</a></li>
 <li class='category'><a href='/blog/categories/images/'>Images (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>Linux (5)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>Linux (6)</a></li>
 <li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
 <li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (3)</a></li>
@@ -1303,6 +1270,10 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/20/keepass-cjk-fonts-diplaying/">解决 Linux 下 KeePass 中文显示的问题</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/01/pkgbuild-for-rjsupplicant/">Linux 版锐捷客户端的 PKGBUILD</a>
@@ -1318,10 +1289,6 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
     
       <li class="post">
         <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/24/school-network-auto-login-by-python/">[Python] 校园网网页验证登录脚本</a>
       </li>
     
   </ul>

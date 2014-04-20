@@ -4,7 +4,7 @@
   <title><![CDATA[尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-04-03T20:46:52+08:00</updated>
+  <updated>2014-04-20T23:16:36+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -12,6 +12,22 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[解决 Linux 下 KeePass 中文显示的问题]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2014/04/20/keepass-cjk-fonts-diplaying/"/>
+    <updated>2014-04-20T23:05:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2014/04/20/keepass-cjk-fonts-diplaying</id>
+    <content type="html"><![CDATA[<p>Linux 下用 KeePass 中文一直以来都显示为方块，准确的说是点开编辑条目的时候，外面的列表显示倒没有问题，弄得我一直不敢在 Linux 下编辑我的数据文件，每次想要添加新帐号都得开个虚拟机。。。</p>
+
+<p>突然发现原来是 Local 设置的问题，因为我习惯使用英文作为系统语言，所以只要让 KeePass 使用中文 Local 运行就好了。比如 Arch 下安装的官方源里的包的话，在 <code>/usr/bin/keepass</code> 里加入：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">LANG</span><span class="o">=</span>zh_CN.utf8
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Linux 版锐捷客户端的 PKGBUILD]]></title>
