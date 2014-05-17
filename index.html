@@ -9,7 +9,7 @@
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="Linux 下用 KeePass 中文一直以来都显示为方块，准确的说是点开编辑条目的时候，外面的列表显示倒没有问题，弄得我一直不敢在 Linux 下编辑我的数据文件，每次想要添加新帐号都得开个虚拟机。。。 突然发现原来是 Local 设置的问题，因为我习惯使用英文作为系统语言，所以只要让 &hellip;">
+  <meta name="description" content="为了安装 Pandoc 添加了 haskell-core 这个仓库（AUR 里的包要自己便宜太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。 可是问题来了，更新/安装一般的官方仓库的包时我是不希望通过代理的，所以会先注释掉 pacman.conf 里的 haskell-core &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/18/ipv6-to-ipv4-proxy/">IPv6 到 IPv4 的代理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-18T01:30:00+08:00" pubdate data-updated="true">May 18<span>th</span>, 2014</time>
+        
+           | <a href="/blog/2014/05/18/ipv6-to-ipv4-proxy/#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io/blog/2014/05/18/ipv6-to-ipv4-proxy/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>为了安装 <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> 添加了 <a href="https://wiki.archlinux.org/index.php/Unofficial_user_repositories#haskell-core">haskell-core</a> 这个仓库（<code>AUR</code> 里的包要自己便宜太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。</p>
+
+<p>可是问题来了，更新/安装一般的官方仓库的包时我是不希望通过代理的，所以会先注释掉 <code>pacman.conf</code> 里的 <code>haskell-core</code> 再 <code>pacman -Syu</code>，这样一来已安装的 <code>haskell</code> 包会引起依赖问题导致更新无法继续。</p>
+
+<p>无意中想起用 <a href="http://cloudmonitor.ca.com/en/ping.php">http://cloudmonitor.ca.com/en/ping.php</a>（以前叫 just-ping.com）ping 一下这个仓库的地址（xsounds.org）看看，结果发现这货只支持通过 <code>IPv6</code> 访问！！！而我学校的网络只支持 <code>IPv4</code>。。。</p>
+
+<p>Google 了一番后让我找到了 <a href="https://www.sixxs.net/tools/gateway/">SixXs</a> 这个服务，提供了 <code>IPv6</code> 到 <code>IPv4</code> 的代理，只要在想要访问的网址后加上 &#8220;.ipv4.sixxs.org&#8221; 这个后缀就可以了，就像这样：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xsounds.org.ipv4.sixxs.org/~haskell/core/$arch</span></code></pre></td></tr></table></div></figure>
+
+
+<p>抱着尝试的心态添加到了 <code>pacman.conf</code> 里，结果真的可用！</p>
+
+<p>ps: 通过这样的地址下载时就看不到进度条了，原因不明。 <br/>
+pps: 其实 <code>SixXs</code> 也提供了 <code>IPv4</code> 到 <code>IPv6</code> 的代理服务的，把上面的后缀换成 &#8220;.sixxs.org&#8221; 或者 &#8220;.ipv6.sixxs.org&#8221; 就可一了。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1167,71 +1221,6 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/30/iframe-dom/">JS 操作 Iframe 非跨域引用页面的DOM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-30T00:00:00+08:00" pubdate data-updated="true">Jun 30<span>th</span>, 2013</time>
-        
-           | <a href="/blog/2013/06/30/iframe-dom/#disqus_thread"
-             data-disqus-identifier="http://wenLiangcan.github.io/blog/2013/06/30/iframe-dom/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>偶然发现了学校校园网登录页上验证码的奇葩特性：</p>
-
-<p><img src="https://dl.dropboxusercontent.com/s/6w4hjuewsb8xzbh/CAPTCHA.png?token_hash=AAFpHUTYN6B9vrtHK1plhgeV3N10ZWyFGHPKlx5PsBQeKw&amp;dl=1" alt="" /></p>
-
-<p>于是写了个小书签，自动填写验证码并登录：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">javascript</span><span class="o">:</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span><span class="kd">var</span> <span class="nx">a</span><span class="o">=</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">).</span><span class="nx">contentWindow</span><span class="p">;</span><span class="nx">a</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;rand&quot;</span><span class="p">).</span><span class="nx">value</span><span class="o">=</span><span class="nx">a</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;confirmrand&quot;</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span><span class="nx">a</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;login1&quot;</span><span class="p">).</span><span class="nx">submit</span><span class="p">();})()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>            <br/>
-登录信息填写的部分是一个由 iframe 标签引用的非跨域页面，可以通过 <em>contentWindow</em> 属性在父页面中对其元素进行操作：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">a</span><span class="o">=</span><span class="nx">doucument</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;iframe 标签的ID&quot;</span><span class="p">).</span><span class="nx">contentWindow</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h2>参考资料</h2>
-
-<ul>
-<li><a href="http://hi.baidu.com/tang_guangyao/item/464da28619aa49e9b07154dd">javascript访问操作iframe中的元素（不跨域）</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1251,7 +1240,7 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
   <h1>Categories</h1>
   <ul id="categories">
     <li class='category'><a href='/blog/categories/android/'>Android (2)</a></li>
-<li class='category'><a href='/blog/categories/arch-linux/'>Arch Linux (3)</a></li>
+<li class='category'><a href='/blog/categories/arch-linux/'>Arch Linux (4)</a></li>
 <li class='category'><a href='/blog/categories/browser/'>Browser (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>C# (1)</a></li>
 <li class='category'><a href='/blog/categories/chrome/'>Chrome (1)</a></li>
@@ -1262,6 +1251,7 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 <li class='category'><a href='/blog/categories/linux/'>Linux (6)</a></li>
 <li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
 <li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
+<li class='category'><a href='/blog/categories/proxy/'>Proxy (1)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (3)</a></li>
 <li class='category'><a href='/blog/categories/sql/'>SQL (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>Vim (1)</a></li>
@@ -1270,6 +1260,10 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/18/ipv6-to-ipv4-proxy/">IPv6 到 IPv4 的代理</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/20/keepass-cjk-fonts-displaying/">解决 Linux 下 KeePass 中文显示的问题</a>
@@ -1285,10 +1279,6 @@ url 的格式为： <code>http://address/login.do?userName1=xxx&amp;password1=xx
     
       <li class="post">
         <a href="/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/">Nexus 7 升级 4.4 KitKat 后重新提权</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/">Linux 下浏览器里使用退格键返回上一页</a>
       </li>
     
   </ul>
