@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Arch Linux | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/arch-linux/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-05-18T02:22:37+08:00</updated>
+  <updated>2014-05-20T18:16:02+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -31,7 +31,7 @@ xsounds.org.ipv4.sixxs.org/~haskell/core/$arch
 抱着尝试的心态添加到了 <code>pacman.conf</code> 里，结果真的可用！</p>
 
 <p>ps: 通过这样的地址下载时就看不到进度条了，原因不明。 <br/>
-pps: 其实 <code>SixXs</code> 也提供了 <code>IPv4</code> 到 <code>IPv6</code> 的代理服务的，把上面的后缀换成 ".sixxs.org" 或者 ".ipv6.sixxs.org" 就可一了。</p>
+pps: 其实 <code>SixXs</code> 也提供了 <code>IPv4</code> 到 <code>IPv6</code> 的代理服务的，把上面的后缀换成 ".sixxs.org" 或者 ".ipv6.sixxs.org" 就可以了。</p>
 ]]></content>
   </entry>
   
