@@ -19,7 +19,7 @@ xsounds.org.ipv4.sixxs.org/~haskell/core/$arch
 抱着尝试的心态添加到了 `pacman.conf` 里，结果真的可用！   
 
 ps: 通过这样的地址下载时就看不到进度条了，原因不明。   
-pps: 其实 `SixXs` 也提供了 `IPv4` 到 `IPv6` 的代理服务的，把上面的后缀换成 ".sixxs.org" 或者 ".ipv6.sixxs.org" 就可一了。
+pps: 其实 `SixXs` 也提供了 `IPv4` 到 `IPv6` 的代理服务的，把上面的后缀换成 ".sixxs.org" 或者 ".ipv6.sixxs.org" 就可以了。
 
 
 
