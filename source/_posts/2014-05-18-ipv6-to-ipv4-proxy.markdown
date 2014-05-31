@@ -6,7 +6,7 @@ comments: true
 categories: [Proxy, Arch Linux]
 ---
 
-为了安装 [Pandoc][pandoc] 添加了 [haskell-core][repo] 这个仓库（`AUR` 里的包要自己便宜太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。   
+为了安装 [Pandoc][pandoc] 添加了 [haskell-core][repo] 这个仓库（`AUR` 里的包要自己编译太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。   
 
 可是问题来了，更新/安装一般的官方仓库的包时我是不希望通过代理的，所以会先注释掉 `pacman.conf` 里的 `haskell-core` 再 `pacman -Syu`，这样一来已安装的 `haskell` 包会引起依赖问题导致更新无法继续。   
 
