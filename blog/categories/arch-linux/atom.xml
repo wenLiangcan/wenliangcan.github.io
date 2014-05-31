@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Arch Linux | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/arch-linux/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-05-20T18:16:02+08:00</updated>
+  <updated>2014-05-31T14:50:40+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -18,7 +18,7 @@
     <link href="http://wenLiangcan.github.io/blog/2014/05/18/ipv6-to-ipv4-proxy/"/>
     <updated>2014-05-18T01:30:00+08:00</updated>
     <id>http://wenLiangcan.github.io/blog/2014/05/18/ipv6-to-ipv4-proxy</id>
-    <content type="html"><![CDATA[<p>为了安装 <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> 添加了 <a href="https://wiki.archlinux.org/index.php/Unofficial_user_repositories#haskell-core">haskell-core</a> 这个仓库（<code>AUR</code> 里的包要自己便宜太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。</p>
+    <content type="html"><![CDATA[<p>为了安装 <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> 添加了 <a href="https://wiki.archlinux.org/index.php/Unofficial_user_repositories#haskell-core">haskell-core</a> 这个仓库（<code>AUR</code> 里的包要自己编译太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。</p>
 
 <p>可是问题来了，更新/安装一般的官方仓库的包时我是不希望通过代理的，所以会先注释掉 <code>pacman.conf</code> 里的 <code>haskell-core</code> 再 <code>pacman -Syu</code>，这样一来已安装的 <code>haskell</code> 包会引起依赖问题导致更新无法继续。</p>
 
