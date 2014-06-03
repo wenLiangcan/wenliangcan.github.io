@@ -32,7 +32,7 @@ d = {l : l for l in list}
 ```python
 d = {key : value for (key, value) in dictionary}
 ```
-- 另外，在 2.6 及一下的 `Python` 中，需要使用 `dict` 构造函数
+- 另外，在 2.6 及以下的 `Python` 中，需要使用 `dict` 构造函数
 ```python
 d = dict(... for ... in sequence)
 ```   
