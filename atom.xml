@@ -4,7 +4,7 @@
   <title><![CDATA[尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-05-31T14:50:40+08:00</updated>
+  <updated>2014-06-03T23:26:32+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -135,7 +135,7 @@ pps: 其实 <code>SixXs</code> 也提供了 <code>IPv4</code> 到 <code>IPv6</co
 
 
 <ul>
-<li>另外，在 2.6 及一下的 <code>Python</code> 中，需要使用 <code>dict</code> 构造函数</li>
+<li>另外，在 2.6 及以下的 <code>Python</code> 中，需要使用 <code>dict</code> 构造函数</li>
 </ul>
 
 
