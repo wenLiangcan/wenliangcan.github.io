@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vim | 尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-06-03T23:26:32+08:00</updated>
+  <updated>2014-07-26T14:36:25+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -12,6 +12,32 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[去除全屏下 GVim 出现的白边]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/"/>
+    <updated>2014-07-26T14:08:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen</id>
+    <content type="html"><![CDATA[<p>全屏下 GVim 的左侧和底部会出现白边，可以在 <code>~/.gtkrc-2.0</code> 文件中加入一下设置：
+```
+style "vimfix" {</p>
+
+<pre><code>bg[NORMAL] = "#002B36"
+</code></pre>
+
+<p>}
+widget "vim-main-window.*GtkForm" style "vimfix"
+<code>``   
+</code>#002B36<code>这个颜色对应于我使用的</code>Solarized Dark<code></code>Vim` 配色的背景色，可以根据个人情况修改。</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?pid=786106#p786106">howto fix gvim border width ?</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Windows下编译支持多种脚本语言的64位VIM(GVIM)]]></title>

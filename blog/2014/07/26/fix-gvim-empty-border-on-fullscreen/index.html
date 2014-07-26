@@ -5,11 +5,17 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Nexus 7 升级 4.4 KitKat 后重新提权 - 尹良灿得闲</title>
+  <title>去除全屏下 GVim 出现的白边 - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="今天我的 N7 二代终于收到 OTA 了，升级后又要重新获取 Root 权限，之前这些工作一直用 Windows 下的 Nexus Root Toolkit 完成，现在尝试在 Linux 下解决。 之所以升级后 Root 权限没了，是因为 su 文件被移除了，所以现在只需要重刷一次 SuperSU &hellip;">
+  <meta name="description" content="全屏下 GVim 的左侧和底部会出现白边，可以在 ~/.gtkrc-2.0 文件中加入一下设置： 1
+2
+3
+4
+style "vimfix" { bg[NORMAL] = "#002B36"
+}
+widget "vim-main-window.*GtkForm" style "vimfix" # &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat">
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -80,7 +86,7 @@
   
   <header>
     
-      <h1 class="entry-title">Nexus 7 升级 4.4 KitKat 后重新提权</h1>
+      <h1 class="entry-title">去除全屏下 GVim 出现的白边</h1>
     
     
       <p class="meta">
@@ -96,7 +102,7 @@
   
 
 
-<time datetime="2013-11-27T14:33:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
+<time datetime="2014-07-26T14:08:00+08:00" pubdate data-updated="true">Jul 26<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
@@ -106,66 +112,27 @@
   </header>
 
 
-<div class="entry-content"><p>今天我的 N7 二代终于收到 OTA 了，升级后又要重新获取 Root 权限，之前这些工作一直用 Windows 下的 <a href="http://www.wugfresh.com/nrt/%E2%80%8E">Nexus Root Toolkit</a> 完成，现在尝试在 Linux 下解决。</p>
+<div class="entry-content"><p>全屏下 GVim 的左侧和底部会出现白边，可以在 <code>~/.gtkrc-2.0</code> 文件中加入一下设置：</p>
 
-<p>之所以升级后 Root 权限没了，是因为 su 文件被移除了，所以现在只需要重刷一次 <a href="http://forum.xda-developers.com/showthread.php?t=1538053">SuperSU</a> 的升级包。刷升级包需要第三方 Recovery，之前 Root 机子时并没有把它直接刷进机器里，而是采用临时启动的方式，现在也用这个方法。</p>
-
-<ul>
-<li>先要确保电脑上有 adb 和 fastboot， Arch 下可以安装 aur 上的 <a href="https://aur.archlinux.org/packages/android-sdk-platform-tools/">android-sdk-platform-tools</a> 包。</li>
-<li>然后下载 SuperSU 的<a href="http://download.chainfire.eu/supersu">升级包</a> 和 <a href="http://techerrata.com/browse/twrp2/flo">TWRP</a>。</li>
-<li>通过 USB 数据线连接设备到电脑。</li>
-<li>把 SuperSU 升级包直接复制到 N7 上，选一个方便找到的路径。</li>
-<li>打开终端，cd 到 Recovery 镜像所在的目录。</li>
-<li>使用 adb 重启到 BootLoader：</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>style "vimfix" {
+</span><span class='line'>    bg[NORMAL] = "#002B36"
+</span><span class='line'>}
+</span><span class='line'>widget "vim-main-window.*GtkForm" style "vimfix"</span></code></pre></td></tr></table></div></figure>
 
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>adb reboot-bootloader
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<ul>
-<li>出现 BootLoader 介面后先看看设备能否被识别：</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>fastboot devices
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<ul>
-<li>没问题的话就可以启动镜像了：</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>fastboot boot ./openrecovery-twrp-2.6.3.1-flo.img
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<ul>
-<li>成功进入 TWRP 后点 Install，选择 SuperSU 升级包，刷之。返回主介面，Reboot -> System，OK !</li>
-</ul>
-
-
-<p>ps : <br/>
-之前之所以不刷入 Recovery，是因为那时的 TWRP 还不支持 N7 二代的分辨率，整个介面缩在了一边，所以其实是刷过一次觉得很难看又删掉了 ╮(￣▽￣&#8221;)╭ 。这次倒是发现已经支持了，不过不想刷了，觉得没必要，想要尽量保持机子的纯净。</p>
-
-<p>刚刚才知道，原来 SuperSU 设置里有一个 叫 Survival mode 的功能，就是用来防止系统 OTA 更新后权限丢失的。不过不能保证百分百有效而且是付费版才能用，我倒是装了个网上找的 key，这次把它勾上，期待下次更新，看有没有效 o((≧▽≦o)</p>
-
-<p>2013-12-12 update: 更新到 4.4.2，Survival mode 生效了^_^)y</p>
+<p> <br/>
+<code>#002B36</code> 这个颜色对应于我使用的 <code>Solarized Dark</code> <code>Vim</code> 配色的背景色，可以根据个人情况修改。</p>
 
 <h2>参考资料</h2>
 
-<p>一个<a href="http://kuai.xunlei.com/d/rMTXArBp8JmbUQQA5c0">刷机包</a>里的批处理文件，来自<a href="http://blog.sina.com.cn/s/blog_0058222c0101cddg.html">a860官方和临时Recovery互刷工具</a></p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?pid=786106#p786106">howto fix gvim border width ?</a></li>
+</ul>
+
 </div>
 
 
@@ -188,12 +155,12 @@
   
 
 
-<time datetime="2013-11-27T14:33:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
+<time datetime="2014-07-26T14:08:00+08:00" pubdate data-updated="true">Jul 26<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/android/'>Android</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>
+    <a class='category' href='/blog/categories/linux/'>Linux</a>, <a class='category' href='/blog/categories/vim/'>Vim</a>
   
 </span>
 
@@ -230,7 +197,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -241,10 +208,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/11/26/press-backspace-key-to-go-back-browser-history-on-linux/" title="Previous Post: Linux 下浏览器里使用退格键返回上一页">&laquo; Linux 下浏览器里使用退格键返回上一页</a>
+        <a class="basic-alignment left" href="/blog/2014/05/18/ipv6-to-ipv4-proxy/" title="Previous Post: IPv6 到 IPv4 的代理">&laquo; IPv6 到 IPv4 的代理</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/12/14/zip-function-and-dict-comprehension-in-python/" title="Next Post: zip 函数和 Dict Comprehension">zip 函数和 Dict Comprehension &raquo;</a>
       
     </p>
   </footer>
@@ -354,8 +319,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/';
-        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/11/27/recover-root-permission-on-nexus-7-kitkat/';
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/';
         var disqus_script = 'embed.js';
       
     (function () {
