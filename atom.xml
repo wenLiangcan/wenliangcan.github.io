@@ -4,7 +4,7 @@
   <title><![CDATA[尹良灿得闲]]></title>
   <link href="http://wenLiangcan.github.io/atom.xml" rel="self"/>
   <link href="http://wenLiangcan.github.io/"/>
-  <updated>2014-07-26T14:36:25+08:00</updated>
+  <updated>2014-08-03T00:01:07+08:00</updated>
   <id>http://wenLiangcan.github.io/</id>
   <author>
     <name><![CDATA[wenLiangcan]]></name>
@@ -12,6 +12,113 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何在 Python 中操作正则替换的匹配结果]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/"/>
+    <updated>2014-08-02T21:39:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python</id>
+    <content type="html"><![CDATA[<p>在进行字符串的正则替换时，我们可能会希望替换的结果是基于匹配结果的，就是说把匹配的字符串提取出来进行一定的修改再应用回原文。</p>
+
+<p>以 <code>sed</code> 为例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;cat dog mouse&#39;</span> | sed <span class="s1">&#39;s/dog/\*&amp;\*/&#39;</span>
+</span><span class='line'>cat *dog* mouse
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用 <code>&amp;</code> 符号可以把匹配的字符串 <code>"dog"</code> 提取出来，然后在它的前后加上了 <code>*</code>。</p>
+
+<p>在 <code>Python</code> 使用 <code>re</code> 模块时可以这么写：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">()</span> <span class="o">+</span> <span class="s">&#39;*&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="s">&#39;cat dog mouse&#39;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 输出：cat *dog* mouse</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当传给 <code>re.sub()</code> 方法的第二个参数是一个函数时，<code>re.sub()</code> 会给这个函数传入一个 <code>Match Object</code> 然后以这个函数的返回值作为替换结果。</p>
+
+<p>我们可以通过这个 <code>Match Object</code> 的 <code>grou()</code> 方法获取每次执行替换前的匹配结果。这个方法之所以叫做 <code>group</code> ，是因为我们有时会使用多个匹配模板，同时获取多个（一组）匹配结果，再以 <code>sed</code> 为例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;cat dog mouse&#39;</span> | sed <span class="s1">&#39;s/\(dog\) \(mouse\)/\*\1\* _\2_/&#39;</span>
+</span><span class='line'>cat *dog* _mouse_
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>符号 <code>\1</code> 和 <code>\2</code> 对应于第一和第二个括号里我们要提取的字符串。</p>
+
+<p>Python 则如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> \
+</span><span class='line'>    <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;_&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;(dog) (mouse)&#39;</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="s">&#39;cat dog mouse&#39;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 输出：cat *dog* _mouse_</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上一例中的 <code>m.group()</code> 也可以写为 <code>m.goup(0)</code>，意为把所有结果作为一个字符串取出。</p>
+
+<p>还有一种跟传统正则表达式比较相似的写法：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="s">r&#39;\1&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;*&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;(dog)&#39;</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="s">&#39;cat dog mouse&#39;</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用 <code>expand()</code> 方法展开表达式，不过似乎不支持符号 <code>&amp;</code>。</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="https://docs.python.org/3.4/howto/regex.html">Regular Expression HOWTO</a></li>
+<li><a href="https://stackoverflow.com/questions/9134964/regex-in-python-is-it-possible-to-get-the-match-replacement-and-final-string">Regex in python: is it possible to get the match, replacement, and final string?</a></li>
+<li><em><a href="http://shop.oreilly.com/product/0636920027072.do">Python Cookbook (3rd Edition)</a></em>: <strong>2.6. Searching and Rplacing Case-Insensitive Text</strong></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[去除全屏下 GVim 出现的白边]]></title>

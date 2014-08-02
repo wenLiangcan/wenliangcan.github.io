@@ -5,17 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>SQL：一次性插入多个元组 - 尹良灿得闲</title>
+  <title>如何在 Python 中操作正则替换的匹配结果 - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="书本上没有，在 StackOverflow 找到了，做一下笔记 句式一： 1
+  <meta name="description" content="在进行字符串的正则替换时，我们可能会希望替换的结果是基于匹配结果的，就是说把匹配的字符串提取出来进行一定的修改再应用回原文。 以 sed 为例： 1
 2
-3
-4
-5
-INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
-(&#39;data1&#39;, &#39; &hellip;">
+$ echo &#39;cat dog mouse&#39; | sed &#39;s/dog/\*&amp;\*/&#39;
+cat *dog &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +21,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert">
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -86,7 +83,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   
   <header>
     
-      <h1 class="entry-title">SQL：一次性插入多个元组</h1>
+      <h1 class="entry-title">如何在 Python 中操作正则替换的匹配结果</h1>
     
     
       <p class="meta">
@@ -102,7 +99,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   
 
 
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+<time datetime="2014-08-02T21:39:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
@@ -112,45 +109,103 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   </header>
 
 
-<div class="entry-content"><p>书本上没有，在 StackOverflow 找到了，做一下笔记</p>
+<div class="entry-content"><p>在进行字符串的正则替换时，我们可能会希望替换的结果是基于匹配结果的，就是说把匹配的字符串提取出来进行一定的修改再应用回原文。</p>
 
-<p><strong>句式一：</strong></p>
+<p>以 <code>sed</code> 为例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;cat dog mouse&#39;</span> | sed <span class="s1">&#39;s/dog/\*&amp;\*/&#39;</span>
+</span><span class='line'>cat *dog* mouse
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用 <code>&amp;</code> 符号可以把匹配的字符串 <code>"dog"</code> 提取出来，然后在它的前后加上了 <code>*</code>。</p>
+
+<p>在 <code>Python</code> 使用 <code>re</code> 模块时可以这么写：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span> <span class="p">(</span><span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;column2&#39;</span><span class="p">)</span> <span class="k">VALUES</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span><span class="p">)</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">()</span> <span class="o">+</span> <span class="s">&#39;*&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="s">&#39;cat dog mouse&#39;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 输出：cat *dog* mouse</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>                      <br/>
-<strong>句式二：</strong></p>
+<p>当传给 <code>re.sub()</code> 方法的第二个参数是一个函数时，<code>re.sub()</code> 会给这个函数传入一个 <code>Match Object</code> 然后以这个函数的返回值作为替换结果。</p>
+
+<p>我们可以通过这个 <code>Match Object</code> 的 <code>grou()</code> 方法获取每次执行替换前的匹配结果。这个方法之所以叫做 <code>group</code> ，是因为我们有时会使用多个匹配模板，同时获取多个（一组）匹配结果，再以 <code>sed</code> 为例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;cat dog mouse&#39;</span> | sed <span class="s1">&#39;s/\(dog\) \(mouse\)/\*\1\* _\2_/&#39;</span>
+</span><span class='line'>cat *dog* _mouse_
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>符号 <code>\1</code> 和 <code>\2</code> 对应于第一和第二个括号里我们要提取的字符串。</p>
+
+<p>Python 则如下：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span>
-</span><span class='line'>      <span class="k">SELECT</span> <span class="s1">&#39;data1&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column2&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> \
+</span><span class='line'>    <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;_&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;(dog) (mouse)&#39;</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="s">&#39;cat dog mouse&#39;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 输出：cat *dog* _mouse_</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p></p>
+<p>上一例中的 <code>m.group()</code> 也可以写为 <code>m.goup(0)</code>，意为把所有结果作为一个字符串取出。</p>
+
+<p>还有一种跟传统正则表达式比较相似的写法：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&#39;*&#39;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="s">r&#39;\1&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;*&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;(dog)&#39;</span><span class="p">,</span> <span class="n">repl</span><span class="p">,</span> <span class="s">&#39;cat dog mouse&#39;</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用 <code>expand()</code> 方法展开表达式，不过似乎不支持符号 <code>&amp;</code>。</p>
 
 <h2>参考资料</h2>
 
 <ul>
-<li><a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Is it possible to insert multiple rows at a time in an SQLite database?</a></li>
+<li><a href="https://docs.python.org/3.4/howto/regex.html">Regular Expression HOWTO</a></li>
+<li><a href="https://stackoverflow.com/questions/9134964/regex-in-python-is-it-possible-to-get-the-match-replacement-and-final-string">Regex in python: is it possible to get the match, replacement, and final string?</a></li>
+<li><em><a href="http://shop.oreilly.com/product/0636920027072.do">Python Cookbook (3rd Edition)</a></em>: <strong>2.6. Searching and Rplacing Case-Insensitive Text</strong></li>
 </ul>
 
 </div>
@@ -175,12 +230,12 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   
 
 
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+<time datetime="2014-08-02T21:39:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/db/'>DB</a>, <a class='category' href='/blog/categories/sql/'>SQL</a>
+    <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/regex/'>Regex</a>
   
 </span>
 
@@ -217,7 +272,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -228,10 +283,8 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/21/vim-compilation/" title="Previous Post: Windows下编译支持多种脚本语言的64位VIM(GVIM)">&laquo; Windows下编译支持多种脚本语言的64位VIM(GVIM)</a>
+        <a class="basic-alignment left" href="/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/" title="Previous Post: 去除全屏下 GVim 出现的白边">&laquo; 去除全屏下 GVim 出现的白边</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/30/iframe-dom/" title="Next Post: JS 操作 iframe 非跨域引用页面的DOM">JS 操作 iframe 非跨域引用页面的DOM &raquo;</a>
       
     </p>
   </footer>
@@ -342,8 +395,8 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/';
-        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/';
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/';
         var disqus_script = 'embed.js';
       
     (function () {

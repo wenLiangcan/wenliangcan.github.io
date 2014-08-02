@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Regex | 尹良灿得闲]]></title>
+  <link href="http://wenLiangcan.github.io/blog/categories/regex/atom.xml" rel="self"/>
+  <link href="http://wenLiangcan.github.io/"/>
+  <updated>2014-08-03T00:01:07+08:00</updated>
+  <id>http://wenLiangcan.github.io/</id>
+  <author>
+    <name><![CDATA[wenLiangcan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[如何在 Python 中操作正则替换的匹配结果]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/"/>
+    <updated>2014-08-02T21:39:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python</id>
+    <content type="html"><![CDATA[<p>在进行字符串的正则替换时，我们可能会希望替换的结果是基于匹配结果的，就是说把匹配的字符串提取出来进行一定的修改再应用回原文。</p>
+
+<p>以 <code>sed</code> 为例：
+<code>bash
+$ echo 'cat dog mouse' | sed 's/dog/\*&amp;\*/'
+cat *dog* mouse
+</code>
+用 <code>&amp;</code> 符号可以把匹配的字符串 <code>"dog"</code> 提取出来，然后在它的前后加上了 <code>*</code>。</p>
+
+<p>在 <code>Python</code> 使用 <code>re</code> 模块时可以这么写：
+```python
+import re</p>
+
+<p>def repl(m):</p>
+
+<pre><code>return '*' + m.group() + '*'
+</code></pre>
+
+<p>print(re.sub('dog', repl, 'cat dog mouse'))</p>
+
+<h1>输出：cat <em>dog</em> mouse</h1>
+
+<p><code>``
+当传给</code>re.sub()<code>方法的第二个参数是一个函数时，</code>re.sub()<code>会给这个函数传入一个</code>Match Object` 然后以这个函数的返回值作为替换结果。</p>
+
+<p>我们可以通过这个 <code>Match Object</code> 的 <code>grou()</code> 方法获取每次执行替换前的匹配结果。这个方法之所以叫做 <code>group</code> ，是因为我们有时会使用多个匹配模板，同时获取多个（一组）匹配结果，再以 <code>sed</code> 为例：
+<code>bash
+$ echo 'cat dog mouse' | sed 's/\(dog\) \(mouse\)/\*\1\* _\2_/'
+cat *dog* _mouse_
+</code>
+符号 <code>\1</code> 和 <code>\2</code> 对应于第一和第二个括号里我们要提取的字符串。</p>
+
+<p>Python 则如下：
+```python
+import re</p>
+
+<p>def repl(m):</p>
+
+<pre><code>return '*' + m.group(1) + '*' + \
+'_' + m.group(2) + '_'
+</code></pre>
+
+<p>print(re.sub('(dog) (mouse)', repl, 'cat dog mouse'))</p>
+
+<h1>输出：cat <em>dog</em> <em>mouse</em></h1>
+
+<p><code>``
+上一例中的</code>m.group()<code>也可以写为</code>m.goup(0)`，意为把所有结果作为一个字符串取出。</p>
+
+<p>还有一种跟传统正则表达式比较相似的写法：
+```python
+import re</p>
+
+<p>def repl(m):</p>
+
+<pre><code>return '*' + m.expand(r'\1') + '*'
+</code></pre>
+
+<p>print(re.sub('(dog)', repl, 'cat dog mouse'))
+<code>``
+用</code>expand()<code>方法展开表达式，不过似乎不支持符号</code>&amp;`。</p>
+
+<h2>参考资料</h2>
+
+<ul>
+<li><a href="https://docs.python.org/3.4/howto/regex.html">Regular Expression HOWTO</a></li>
+<li><a href="https://stackoverflow.com/questions/9134964/regex-in-python-is-it-possible-to-get-the-match-replacement-and-final-string">Regex in python: is it possible to get the match, replacement, and final string?</a></li>
+<li><em><a href="http://shop.oreilly.com/product/0636920027072.do">Python Cookbook (3rd Edition)</a></em>: <strong>2.6. Searching and Rplacing Case-Insensitive Text</strong></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
