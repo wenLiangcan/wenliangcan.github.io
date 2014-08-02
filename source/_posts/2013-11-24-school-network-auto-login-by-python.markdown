@@ -3,7 +3,7 @@ layout: post
 title: "[Python] 校园网网页验证登录脚本"
 date: 2013-11-24 11:14
 comments: true
-categories: Python
+categories: [Python, Network]
 ---
 
 依旧毫无技术含量 =。=，走了很多弯路，很多原理也没深入学习，不过还是记录一下吧。。。   

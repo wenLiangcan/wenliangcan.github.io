@@ -3,7 +3,7 @@ layout: post
 title: "Linux 版锐捷客户端的 PKGBUILD"
 date: 2014-04-01 19:58
 comments: true
-categories: [Linux, Arch Linux]
+categories: [Linux, Arch Linux, Network]
 ---
 
 在愚人节的今天，学校全面强制使用 4.99 版本的锐捷客户端作为上网认证，之前一直在 Arch 下默默辛勤工作的 [MentoHUST][mht] 就这样挂掉了。。。   

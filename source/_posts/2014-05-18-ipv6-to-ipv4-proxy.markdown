@@ -3,7 +3,7 @@ layout: post
 title: "IPv6 到 IPv4 的代理"
 date: 2014-05-18 01:30
 comments: true
-categories: [Proxy, Arch Linux]
+categories: [Network, Arch Linux]
 ---
 
 为了安装 [Pandoc][pandoc] 添加了 [haskell-core][repo] 这个仓库（`AUR` 里的包要自己编译太麻烦了），不过要用 Goagent 代理才能访问，本来以为是墙了。   
