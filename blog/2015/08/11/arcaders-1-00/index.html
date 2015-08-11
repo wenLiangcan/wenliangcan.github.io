@@ -5,17 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>SQL：一次性插入多个元组 - 尹良灿得闲</title>
+  <title>【译】ArcadeRs 1.0: 介绍 - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="书本上没有，在 StackOverflow 找到了，做一下笔记 句式一： 1
-2
-3
-4
-5
-INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
-(&#39;data1&#39;, &#39; &hellip;">
+  <meta name="description" content="原文：ArcadeRS 1.0: The project 本系列文章的目是通过开发一个简单的老式射击游戏来一探 Rust 这门语言，这是其中的介绍部分。除去介绍，本系列共有 16 个部分组成： 一个简单的窗口，我们在此安装 SDL2
+事件处理，我们在此讨论生存期限
+处理更多的事件，我们在此讨论宏 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +20,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert">
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -86,7 +82,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   
   <header>
     
-      <h1 class="entry-title">SQL：一次性插入多个元组</h1>
+      <h1 class="entry-title">【译】ArcadeRs 1.0: 介绍</h1>
     
     
       <p class="meta">
@@ -102,7 +98,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   
 
 
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+<time datetime="2015-08-11T20:14:00+08:00" pubdate data-updated="true">Aug 11<span>th</span>, 2015</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
@@ -112,47 +108,45 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   </header>
 
 
-<div class="entry-content"><p>书本上没有，在 StackOverflow 找到了，做一下笔记</p>
+<div class="entry-content"><blockquote><p>原文：<a href="https://jadpole.github.io/arcaders/arcaders-1-0/">ArcadeRS 1.0: The project</a></p></blockquote>
 
-<p><strong>句式一：</strong></p>
+<p>本系列文章的目是通过开发一个简单的老式射击游戏来一探 <code>Rust</code> 这门语言，这是其中的介绍部分。除去介绍，本系列共有 16 个部分组成：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span> <span class="p">(</span><span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;column2&#39;</span><span class="p">)</span> <span class="k">VALUES</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>                      <br/>
-<strong>句式二：</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span>
-</span><span class='line'>      <span class="k">SELECT</span> <span class="s1">&#39;data1&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column2&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
+<ol>
+<li><a href="/blog/2015/08/11/arcaders-1-01/">一个简单的窗口</a>，我们在此安装 SDL2</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-2/">事件处理</a>，我们在此讨论生存期限</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-3/">处理更多的事件</a>，我们在此讨论宏</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-4/">视图</a>，我们在此学习装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-5/">视图的切换</a>，我们在此使用装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-6/">移动的矩形</a>，我们在此绘制图像</li>
+<li><a href="#">Main menu</a>, where we play with textures and Rust&#8217;s vectors</li>
+<li><a href="#">Sprites</a>, where we create shareable images</li>
+<li><a href="#">Backgrounds</a>, where we handle resizing, scale and translate through time</li>
+<li><a href="#">The player&#8217;s ship</a>, where we control a multi-sprite object</li>
+<li><a href="#">Shooting bullets</a>, where we handle resource pooling</li>
+<li><a href="#">Animated sprites</a>, where we render animated asteroids</li>
+<li><a href="#">Asteroid attack!</a>, where we make multiple objects interact</li>
+<li><a href="#">Explosions</a>, where we see things do boom.</li>
+<li><a href="#">Music</a>, where we hear things go boom.</li>
+<li><a href="#">High score &amp; wrap-up</a>, where we play with the filesystem</li>
+</ol>
 
 
-<p></p>
+<p>这是一篇写给那些哪怕仅仅是通过某个脚本语言，已经对软件开发这门技艺有所了解的人的教程，他们刚刚发现了这头名为 <code>Rust</code> 的怪兽。他们过了一遍<a href="https://doc.rust-lang.org/book/">官方教程</a>，阅读了大量关于这门看起来熟悉，据说向原有的软件安全概念发起了挑战的语言的博文，然后 excited，想要发掘如何真正地在实践中运用 <code>Rust</code>。</p>
 
-<h2>参考资料</h2>
+<p>我对读者的要求是，他或她（或者它？）应该理解诸如接口，方法，条件结构，和（基础的）静态类型这些概念。多数情况下，这些术语的含义在其上下文中是不言自明的。然而，如果理解它们对你来说很成问题，提醒一下我不会对其作长篇大论的解释。</p>
 
-<ul>
-<li><a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Is it possible to insert multiple rows at a time in an SQLite database?</a></li>
-</ul>
+<p>我还期望你阅读这篇教程前已经学习过一点 <code>Rust</code>，即使只是浅显的部分。比如你得明白 <code>Rust</code> 的 <code>use</code> 语句，哪怕仅限于在 <code>main.rs</code> 文件里，是用来干什么的。当然，你不需要成为一名专家才能探索其中的微妙。</p>
 
+<p>在接下来的几周里，我们将会基于 Mike Geig 的棒棒哒 <a href="http://fixbyproximity.com/2d-game-development-course/">2D 游戏开发教程</a> 来制作一个太空射击游戏。我们还会编写一个叫做 <code>phi</code> 的库，它会为我们提供诸如视图（在 LibGDX 中称为 screens），内置碰撞检测（虽然很基础）的矩形，和动态精灵等 2D 游戏所需的组件。</p>
+
+<p>我们将要用到的库是 AngryLawyer 的 SDL2 的绑定，版本为 6.0，你可以在<a href="https://github.com/AngryLawyer/rust-sdl2">这里</a>找到，以及相关的一些插件。</p>
+
+<p>继续讲述前，我要强调的是你无需精通 <code>Rust</code> 再阅读这篇教程。相反，本教程的目的之一就是探索 <code>Rust</code> 的微妙之处，哪怕不是主要的，基于此，老实说，我不推荐在生产中使用 <code>phi</code>。可是，你至少得浏览过<a href="https://doc.rust-lang.org/book/">官方教程</a>或者 <a href="http://rustbyexample.com/">Rust by Example</a>。</p>
+
+<p>基本上，我会直接展示如何<em>使用</em>而不会解释语法。</p>
+
+<p>所以，不多说，我们<a href="/blog/2015/08/11/arcaders-1-01/">开始吧</a>。</p>
 </div>
 
 
@@ -175,12 +169,12 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   
 
 
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+<time datetime="2015-08-11T20:14:00+08:00" pubdate data-updated="true">Aug 11<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/db/'>DB</a>, <a class='category' href='/blog/categories/sql/'>SQL</a>
+    <a class='category' href='/blog/categories/gamedev/'>GameDev</a>, <a class='category' href='/blog/categories/rust/'>Rust</a>, <a class='category' href='/blog/categories/translation/'>Translation</a>
   
 </span>
 
@@ -217,7 +211,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -228,10 +222,10 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/21/vim-compilation/" title="Previous Post: Windows下编译支持多种脚本语言的64位VIM(GVIM)">&laquo; Windows下编译支持多种脚本语言的64位VIM(GVIM)</a>
+        <a class="basic-alignment left" href="/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/" title="Previous Post: 如何在 Python 中操作正则替换的匹配结果">&laquo; 如何在 Python 中操作正则替换的匹配结果</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013/06/30/iframe-dom/" title="Next Post: JS 操作 iframe 非跨域引用页面的DOM">JS 操作 iframe 非跨域引用页面的DOM &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2015/08/11/arcaders-1-01/" title="Next Post: 【译】ArcadeRs 1.1: 一个简单的窗口">【译】ArcadeRs 1.1: 一个简单的窗口 &raquo;</a>
       
     </p>
   </footer>
@@ -345,8 +339,8 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/';
-        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/';
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00/';
         var disqus_script = 'embed.js';
       
     (function () {

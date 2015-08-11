@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: GameDev | 尹良灿得闲]]></title>
+  <link href="http://wenLiangcan.github.io/blog/categories/gamedev/atom.xml" rel="self"/>
+  <link href="http://wenLiangcan.github.io/"/>
+  <updated>2015-08-12T01:40:45+08:00</updated>
+  <id>http://wenLiangcan.github.io/</id>
+  <author>
+    <name><![CDATA[wenLiangcan]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[【译】ArcadeRs 1.1: 一个简单的窗口]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01/"/>
+    <updated>2015-08-11T20:32:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01</id>
+    <content type="html"><![CDATA[<blockquote><p>原文：<a href="https://jadpole.github.io/arcaders/arcaders-1-1/">ArcadeRS 1.1: A simple window</a></p></blockquote>
+
+<p>本系列文章的目是通过开发一个简单的老式射击游戏来一探 <code>Rust</code> 这门语言，这是其中的第一部分。除去介绍，本系列共有 16 个部分组成：</p>
+
+<ol>
+<li><a href="/blog/2015/08/11/arcaders-1-01/">一个简单的窗口</a>，我们在此安装 SDL2</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-2/">事件处理</a>，我们在此讨论生存期限</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-3/">处理更多的事件</a>，我们在此讨论宏</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-4/">视图</a>，我们在此学习装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-5/">视图的切换</a>，我们在此使用装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-6/">移动的矩形</a>，我们在此绘制图像</li>
+<li><a href="#">Main menu</a>, where we play with textures and Rust's vectors</li>
+<li><a href="#">Sprites</a>, where we create shareable images</li>
+<li><a href="#">Backgrounds</a>, where we handle resizing, scale and translate through time</li>
+<li><a href="#">The player's ship</a>, where we control a multi-sprite object</li>
+<li><a href="#">Shooting bullets</a>, where we handle resource pooling</li>
+<li><a href="#">Animated sprites</a>, where we render animated asteroids</li>
+<li><a href="#">Asteroid attack!</a>, where we make multiple objects interact</li>
+<li><a href="#">Explosions</a>, where we see things do boom.</li>
+<li><a href="#">Music</a>, where we hear things go boom.</li>
+<li><a href="#">High score &amp; wrap-up</a>, where we play with the filesystem</li>
+</ol>
+
+
+<h2>一个华丽的新项目</h2>
+
+<p>作为开始，让我们亲切地请求 Cargo 为我们创建一个新项目。在你的项目目录下执行：</p>
+
+<p><code>sh
+$ cargo new arcade-rs --bin
+$ cd arcade-rs
+</code></p>
+
+<p>如果你打开生成的 <code>Cargo.toml</code>，你可以看到类似如下的内容：</p>
+
+<p><code>
+[package]
+name = "arcade-rs"
+version = "0.1.0"
+authors = ["John Doe &lt;john.doe@example.com&gt;"]
+</code></p>
+
+<p>你可以通过 <code>cargo run</code> 命令运行生成的 <code>hello world</code> 程序，然而现在来说这并没有什么卵用。我们要做的是，稍微更改一下这个配置文件以加入所需的依赖。请把以下几行添加到该文件的底部：</p>
+
+<p><code>
+[dependencies]
+sdl2 = "0.6"
+</code></p>
+
+<p>结束的时候，我们的项目会依赖于更多的外部 <code>crate</code> （<code>Rust</code> 概念中的 库），不过眼下我们只需要这些。<code>sdl2</code> <em>crate</em> 使我们可以创建程序窗口，在上面渲染画面和处理各种事件，而这些也正好是我们在接下来的几章将要做的事情。</p>
+
+<blockquote><p>很可能你的电脑上尚未安装有 SDL2 的开发库，那样的话将无法编译 SDL2 的 Rust 绑定。
+我建议你参照 <a href="https://github.com/AngryLawyer/rust-sdl2#sdl20--development-libraries">rust-sdl2 的 README 文件</a> 中的步骤，在你的系统中安装所需的开发库。
+等你完成后我们接着继续。</p></blockquote>
+
+<p>现在，SDL2 已经（希望是）安装在你的系统中了，你可以执行：</p>
+
+<p>```sh
+$ cargo build</p>
+
+<pre><code>Updating registry `https://github.com/rust-lang/crates.io-index`
+</code></pre>
+
+<p> Downloading sdl2 v0.6.0
+ Downloading sdl2-sys v0.6.0
+   Compiling sdl2-sys v0.6.0
+   Compiling bitflags v0.2.1
+   Compiling rustc-serialize v0.3.15
+   Compiling libc v0.1.8
+   Compiling rand v0.3.8
+   Compiling num v0.1.25
+   Compiling sdl2 v0.6.0
+   Compiling arcade-rs v0.1.0 (file:///home/johndoe/projects/arcade-rs)
+```</p>
+
+<p>如果一切顺利，各类绑定和它们的依赖就已经编译好而我们也可以开启一个窗口了。否则，很可能你并没有正确安装 SDL2 而你只有解决了这一问题才能进行接下来的步骤。</p>
+
+<h2>激动人心的三秒钟</h2>
+
+<p>好了，让我们来创建一个窗口。用你最喜欢的文本编辑器打开 <code>src/main.rs</code> 然后修改为以下内容：</p>
+
+<p>```rust
+extern crate sdl2;</p>
+
+<p>use sdl2::pixels::Color;
+use std::thread;</p>
+
+<p>fn main() {</p>
+
+<pre><code>// 初始化 SDL2
+let sdl_context = sdl2::init().video()
+    .build().unwrap();
+
+// 创建窗口
+let window = sdl_context.window("ArcadeRS Shooter", 800, 600)
+    .position_centered().opengl()
+    .build().unwrap();
+
+let mut renderer = window.renderer()
+    .accelerated()
+    .build().unwrap();
+
+renderer.set_draw_color(Color::RGB(0, 0, 0));
+renderer.clear();
+renderer.present();
+
+thread::sleep_ms(3000);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>现在，如果你运行这个程序的话...</p>
+
+<p>```sh
+$ cargo run
+   Compiling arcade-rs v0.1.0 (file:///home/johndoe/projects/arcade-rs)</p>
+
+<pre><code> Running `target/debug/arcade-rs`
+</code></pre>
+
+<p>```</p>
+
+<p><img src="https://jadpole.github.io/images/arcade-1.png" alt="three_sec" /></p>
+
+<p>... 你可以看到一个窗口在屏幕上停留了 3 秒钟，然后消失了。就是这样！有趣的部分来了：弄明白刚刚我们所写的究竟是什么意思。</p>
+
+<p><code>rust
+extern crate sdl2;
+</code></p>
+
+<p>一开始我们先包含了作为依赖添加进来的 <code>sdl2</code> <em>crate</em>。如果需要，我们可以像 Python 那样，给它另起一个名字。比如这样：</p>
+
+<p><code>rust
+extern crate sdl2 as pineapple;
+</code></p>
+
+<p>之后我们把代码中出现的所有 <code>sdl2</code> 都换成 <code>pineapple</code>（菠萝） 得到的结果是不变的。虽然我挺喜欢菠萝，接下来的文章里我还是继续使用 <code>sdl2</code> 算了（当然，没人强求 你 也这么做）。有一个类似的语法可以用于重命名被使用（use）的类型（type）和函数（function），我将在<a href="https://jadpole.github.io/arcaders/arcaders-1-6/">第 6 章</a>用到它。 <br/>
+<code>rust
+use sdl2::pixels::Color;
+use std::thread;
+</code>
+第一行很简单：因为 <code>sdl2::pixels::Color</code> 敲起来太长了，所以我们只使用（use）这一路径下的最后一个标识符 <code>Color</code> 来代表同一事物。<code>use</code> 语句不仅可以用于类型和函数，对 模块（module）同样有效。这就是第二行的用意，现在我们只需要写 <code>thread::某标函数</code> 而不用写 <code>std::thread::某函数</code>。</p>
+
+<p>```rust
+fn main() {</p>
+
+<p>}
+```</p>
+
+<p>在此，我们声明了作为我们程序的入口的 <code>main</code> 函数。</p>
+
+<p>```rust</p>
+
+<pre><code>let sdl_context = sdl2::init().video()
+    .build().unwrap();
+</code></pre>
+
+<p>```</p>
+
+<p>现在，开始触及有趣的部分了！<code>init</code> 函数返回一个我们用来初始化 SDL2 的上下文（context）的对象。厉害之处是这里用到了 <code>Rust</code> 版的<a href="https://aturon.github.io/ownership/builders.html">生成器模式(builder pattern)</a>。就是说，<code>init</code> 返回如下类型的对象：</p>
+
+<p>```rust
+pub struct InitBuilder {</p>
+
+<pre><code>flags: u32
+</code></pre>
+
+<p>}
+```</p>
+
+<p>这一类型提供了一个便于使用 SDL2 API 的接口。通过调用比如像 <code>timer()</code>，<code>joystick()</code> 和 <code>video()</code> 这些方法，我们可以选择性的初始化 SDL2 的某些部分，以最小化这个库的占用空间。一旦准备就绪，我们调用 <code>build()</code> 方法，获得 <code>Result&lt;Sdl, String&gt;</code>。</p>
+
+<p>使用 <code>Result</code> 类型的对象是 <code>Rust</code> 中进行错误处理（error handling）的方式。得到错误值的可能性被集成到了类型系统中，开发者被强制要求去处理这一情况，从而获取函数的结果。这一次，我们只是简单的通过 <code>unwrap()</code> “解封”其中的值，这意味着我们断定（assert）我们得到的是被封装在 <code>Ok</code> 类型中的正确值，否则的话就不再执行后续的代码。我们之所以这么做，是因为如果我们创建不了上下文，我们就无法渲染我们的游戏，我们的程序就失去了它的意义了。</p>
+
+<p>解封（unwrapping）<code>Err</code> 中的值会把错误信息打印出来并引发恐慌（panic），使得程序安全地崩溃掉。如果被解封的值是 <code>Ok(Sdl)</code> 类型的话，解封出来的值会被直接返回并赋值给 <code>sdl_context</code>。</p>
+
+<p>把上下文绑定（binding）到一个标识符的好处是，一旦它脱离了自己的作用域（在 <code>main</code> 函数结束处），它所持有的所有资源都会被自动释放。其实，就算我们的程序运行至某处 panic 了，析构器（destructor）也会被如常调用，以防止内存泄漏。这就是我所指的安全地崩溃掉。</p>
+
+<p>```rust</p>
+
+<pre><code>let window = sdl_context.window("ArcadeRS Shooter", 800, 600)
+    .position_centered().opengl()
+    .build().unwrap();
+</code></pre>
+
+<p>```</p>
+
+<p>我们在此处打开了窗口。它有一个名为“ArcadeRS Shooter”的标题，800 象素的宽度 和 600 象素的高度。像前面一样，这里使用了生成器模式，我们可以方便地使窗口居中和激活 OpenGL 模式（更高效）的渲染。</p>
+
+<p>```rust</p>
+
+<pre><code>let mut renderer = window.renderer()
+    .accelerated()
+    .build().unwrap();
+</code></pre>
+
+<p>```</p>
+
+<p>这一步你懂的！我们在创建一个与窗口关联的渲染器（renderer），把它设置成可以使用 OpenGL 来辅助渲染，之后我们会用它来“作画”。如果创建失败，程序就会伴随着错误信息 panic 掉。</p>
+
+<p>```rust</p>
+
+<pre><code>renderer.set_draw_color(Color::RGB(0, 0, 0));
+renderer.clear();
+renderer.present();
+</code></pre>
+
+<p>```</p>
+
+<p>在第一行，我们把笔刷设置为黑色（red=0，green=0，blue=0）。第二行处，我们先清空缓冲区再填入刚刚选择的笔刷颜色。第三行交换缓冲区正式向用户展现我们绘制的画面。</p>
+
+<p>如果我们去掉最后一行，奇怪的事情就发生了。比如在 Gnome 下，窗口的内容被设置成了它背后的画面。虽然可能听起来怪怪的，按照 <code>Rust</code> 世界的传统，<code>renderer</code> 所提供的接口让我们无法轻易地使程序挂掉。</p>
+
+<p><img src="https://jadpole.github.io/images/arcade-2.png" alt="blank_win" /></p>
+
+<p>```rust</p>
+
+<pre><code>thread::sleep_ms(3000);
+</code></pre>
+
+<p>```</p>
+
+<p>继续执行程序前，我们在这里先等待 3000 毫秒，即 3 秒钟。也可以看出，此后 <code>main</code> 函数就结束了，在其中分配的所有资源都会被释放掉。在用户看来，就是程序窗口被关掉。对我们来说，也没有太大的不同。美妙的是，即使此处发生了再多的事情，我们也无需为之操心！</p>
+
+<p>你也许注意到了，我们从头到尾都无需写明任何数据类型。当然，我们使用了诸如 <code>sdl2::init</code> 和 <code>Color::new</code> 这些模块函数（module function）和关联函数（associated function）（也许你会对静态方法这个名字更熟悉些），可是我们从来没有告诉 <code>Rust</code> 我们的上下文的类型是 <code>sdl2::Sdl</code>。这被称为 类型推导（type inference），它是使得 <code>Rust</code> 让人愉快地使用的众多特性之一，虽然它们看起来像是无关紧要的附加品。</p>
+
+<p>这就是本系列的第一部分。<a href="https://jadpole.github.io/arcaders/arcaders-1-2/">下一次</a>，我们将提出一种更好的关闭窗口的方式：通过点击那个叉叉（x）。</p>
+
+<p>在那之前，保持 rusting！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[【译】ArcadeRs 1.0: 介绍]]></title>
+    <link href="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00/"/>
+    <updated>2015-08-11T20:14:00+08:00</updated>
+    <id>http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-00</id>
+    <content type="html"><![CDATA[<blockquote><p>原文：<a href="https://jadpole.github.io/arcaders/arcaders-1-0/">ArcadeRS 1.0: The project</a></p></blockquote>
+
+<p>本系列文章的目是通过开发一个简单的老式射击游戏来一探 <code>Rust</code> 这门语言，这是其中的介绍部分。除去介绍，本系列共有 16 个部分组成：</p>
+
+<ol>
+<li><a href="/blog/2015/08/11/arcaders-1-01/">一个简单的窗口</a>，我们在此安装 SDL2</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-2/">事件处理</a>，我们在此讨论生存期限</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-3/">处理更多的事件</a>，我们在此讨论宏</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-4/">视图</a>，我们在此学习装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-5/">视图的切换</a>，我们在此使用装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-6/">移动的矩形</a>，我们在此绘制图像</li>
+<li><a href="#">Main menu</a>, where we play with textures and Rust's vectors</li>
+<li><a href="#">Sprites</a>, where we create shareable images</li>
+<li><a href="#">Backgrounds</a>, where we handle resizing, scale and translate through time</li>
+<li><a href="#">The player's ship</a>, where we control a multi-sprite object</li>
+<li><a href="#">Shooting bullets</a>, where we handle resource pooling</li>
+<li><a href="#">Animated sprites</a>, where we render animated asteroids</li>
+<li><a href="#">Asteroid attack!</a>, where we make multiple objects interact</li>
+<li><a href="#">Explosions</a>, where we see things do boom.</li>
+<li><a href="#">Music</a>, where we hear things go boom.</li>
+<li><a href="#">High score &amp; wrap-up</a>, where we play with the filesystem</li>
+</ol>
+
+
+<p>这是一篇写给那些哪怕仅仅是通过某个脚本语言，已经对软件开发这门技艺有所了解的人的教程，他们刚刚发现了这头名为 <code>Rust</code> 的怪兽。他们过了一遍<a href="https://doc.rust-lang.org/book/">官方教程</a>，阅读了大量关于这门看起来熟悉，据说向原有的软件安全概念发起了挑战的语言的博文，然后 excited，想要发掘如何真正地在实践中运用 <code>Rust</code>。</p>
+
+<p>我对读者的要求是，他或她（或者它？）应该理解诸如接口，方法，条件结构，和（基础的）静态类型这些概念。多数情况下，这些术语的含义在其上下文中是不言自明的。然而，如果理解它们对你来说很成问题，提醒一下我不会对其作长篇大论的解释。</p>
+
+<p>我还期望你阅读这篇教程前已经学习过一点 <code>Rust</code>，即使只是浅显的部分。比如你得明白 <code>Rust</code> 的 <code>use</code> 语句，哪怕仅限于在 <code>main.rs</code> 文件里，是用来干什么的。当然，你不需要成为一名专家才能探索其中的微妙。</p>
+
+<p>在接下来的几周里，我们将会基于 Mike Geig 的棒棒哒 <a href="http://fixbyproximity.com/2d-game-development-course/">2D 游戏开发教程</a> 来制作一个太空射击游戏。我们还会编写一个叫做 <code>phi</code> 的库，它会为我们提供诸如视图（在 LibGDX 中称为 screens），内置碰撞检测（虽然很基础）的矩形，和动态精灵等 2D 游戏所需的组件。</p>
+
+<p>我们将要用到的库是 AngryLawyer 的 SDL2 的绑定，版本为 6.0，你可以在<a href="https://github.com/AngryLawyer/rust-sdl2">这里</a>找到，以及相关的一些插件。</p>
+
+<p>继续讲述前，我要强调的是你无需精通 <code>Rust</code> 再阅读这篇教程。相反，本教程的目的之一就是探索 <code>Rust</code> 的微妙之处，哪怕不是主要的，基于此，老实说，我不推荐在生产中使用 <code>phi</code>。可是，你至少得浏览过<a href="https://doc.rust-lang.org/book/">官方教程</a>或者 <a href="http://rustbyexample.com/">Rust by Example</a>。</p>
+
+<p>基本上，我会直接展示如何<em>使用</em>而不会解释语法。</p>
+
+<p>所以，不多说，我们<a href="/blog/2015/08/11/arcaders-1-01/">开始吧</a>。</p>
+]]></content>
+  </entry>
+  
+</feed>

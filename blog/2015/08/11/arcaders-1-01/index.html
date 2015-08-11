@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>【译】ArcadeRs 1.1: 一个简单的窗口 - 尹良灿得闲</title>
+  <meta name="author" content="wenLiangcan">
+
+  
+  <meta name="description" content="原文：ArcadeRS 1.1: A simple window 本系列文章的目是通过开发一个简单的老式射击游戏来一探 Rust 这门语言，这是其中的第一部分。除去介绍，本系列共有 16 个部分组成： 一个简单的窗口，我们在此安装 SDL2
+事件处理，我们在此讨论生存期限
+处理更多的事件， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40394985-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">尹良灿得闲</a></h1>
+  
+    <h2>巴甫洛夫很忙……巴甫洛夫正在死亡</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/wenLiangcan" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:wenLiangcan.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">【译】ArcadeRs 1.1: 一个简单的窗口</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-11T20:32:00+08:00" pubdate data-updated="true">Aug 11<span>th</span>, 2015</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote><p>原文：<a href="https://jadpole.github.io/arcaders/arcaders-1-1/">ArcadeRS 1.1: A simple window</a></p></blockquote>
+
+<p>本系列文章的目是通过开发一个简单的老式射击游戏来一探 <code>Rust</code> 这门语言，这是其中的第一部分。除去介绍，本系列共有 16 个部分组成：</p>
+
+<ol>
+<li><a href="/blog/2015/08/11/arcaders-1-01/">一个简单的窗口</a>，我们在此安装 SDL2</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-2/">事件处理</a>，我们在此讨论生存期限</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-3/">处理更多的事件</a>，我们在此讨论宏</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-4/">视图</a>，我们在此学习装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-5/">视图的切换</a>，我们在此使用装箱，模式匹配，trait 对象，还有动态分发</li>
+<li><a href="https://jadpole.github.io/arcaders/arcaders-1-6/">移动的矩形</a>，我们在此绘制图像</li>
+<li><a href="#">Main menu</a>, where we play with textures and Rust&#8217;s vectors</li>
+<li><a href="#">Sprites</a>, where we create shareable images</li>
+<li><a href="#">Backgrounds</a>, where we handle resizing, scale and translate through time</li>
+<li><a href="#">The player&#8217;s ship</a>, where we control a multi-sprite object</li>
+<li><a href="#">Shooting bullets</a>, where we handle resource pooling</li>
+<li><a href="#">Animated sprites</a>, where we render animated asteroids</li>
+<li><a href="#">Asteroid attack!</a>, where we make multiple objects interact</li>
+<li><a href="#">Explosions</a>, where we see things do boom.</li>
+<li><a href="#">Music</a>, where we hear things go boom.</li>
+<li><a href="#">High score &amp; wrap-up</a>, where we play with the filesystem</li>
+</ol>
+
+
+<h2>一个华丽的新项目</h2>
+
+<p>作为开始，让我们亲切地请求 Cargo 为我们创建一个新项目。在你的项目目录下执行：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cargo new arcade-rs --bin
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>arcade-rs
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果你打开生成的 <code>Cargo.toml</code>，你可以看到类似如下的内容：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>package<span class="o">]</span>
+</span><span class='line'><span class="nv">name</span> <span class="o">=</span> <span class="s2">&quot;arcade-rs&quot;</span>
+</span><span class='line'><span class="nv">version</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
+</span><span class='line'><span class="nv">authors</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;John Doe &lt;john.doe@example.com&gt;&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>你可以通过 <code>cargo run</code> 命令运行生成的 <code>hello world</code> 程序，然而现在来说这并没有什么卵用。我们要做的是，稍微更改一下这个配置文件以加入所需的依赖。请把以下几行添加到该文件的底部：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>dependencies<span class="o">]</span>
+</span><span class='line'><span class="nv">sdl2</span> <span class="o">=</span> <span class="s2">&quot;0.6&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>结束的时候，我们的项目会依赖于更多的外部 <code>crate</code> （<code>Rust</code> 概念中的 库），不过眼下我们只需要这些。<code>sdl2</code> <em>crate</em> 使我们可以创建程序窗口，在上面渲染画面和处理各种事件，而这些也正好是我们在接下来的几章将要做的事情。</p>
+
+<blockquote><p>很可能你的电脑上尚未安装有 SDL2 的开发库，那样的话将无法编译 SDL2 的 Rust 绑定。
+我建议你参照 <a href="https://github.com/AngryLawyer/rust-sdl2#sdl20--development-libraries">rust-sdl2 的 README 文件</a> 中的步骤，在你的系统中安装所需的开发库。
+等你完成后我们接着继续。</p></blockquote>
+
+<p>现在，SDL2 已经（希望是）安装在你的系统中了，你可以执行：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cargo build
+</span><span class='line'>    Updating registry <span class="sb">`</span>https://github.com/rust-lang/crates.io-index<span class="sb">`</span>
+</span><span class='line'> Downloading sdl2 v0.6.0
+</span><span class='line'> Downloading sdl2-sys v0.6.0
+</span><span class='line'>   Compiling sdl2-sys v0.6.0
+</span><span class='line'>   Compiling bitflags v0.2.1
+</span><span class='line'>   Compiling rustc-serialize v0.3.15
+</span><span class='line'>   Compiling libc v0.1.8
+</span><span class='line'>   Compiling rand v0.3.8
+</span><span class='line'>   Compiling num v0.1.25
+</span><span class='line'>   Compiling sdl2 v0.6.0
+</span><span class='line'>   Compiling arcade-rs v0.1.0 <span class="o">(</span>file:///home/johndoe/projects/arcade-rs<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果一切顺利，各类绑定和它们的依赖就已经编译好而我们也可以开启一个窗口了。否则，很可能你并没有正确安装 SDL2 而你只有解决了这一问题才能进行接下来的步骤。</p>
+
+<h2>激动人心的三秒钟</h2>
+
+<p>好了，让我们来创建一个窗口。用你最喜欢的文本编辑器打开 <code>src/main.rs</code> 然后修改为以下内容：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="k">extern</span><span class="w"> </span><span class="n">crate</span><span class="w"> </span><span class="n">sdl2</span><span class="p">;</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">use</span><span class="w"> </span><span class="n">sdl2</span><span class="o">::</span><span class="n">pixels</span><span class="o">::</span><span class="n">Color</span><span class="p">;</span><span class="w"></span>
+</span><span class='line'><span class="kn">use</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">thread</span><span class="p">;</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fn</span><span class="w"> </span><span class="n">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="c1">// 初始化 SDL2</span>
+</span><span class='line'><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">sdl_context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sdl2</span><span class="o">::</span><span class="n">init</span><span class="p">().</span><span class="n">video</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">        </span><span class="p">.</span><span class="n">build</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="w">    </span><span class="c1">// 创建窗口</span>
+</span><span class='line'><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sdl_context</span><span class="p">.</span><span class="n">window</span><span class="p">(</span><span class="s">&quot;ArcadeRS Shooter&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p">)</span><span class="w"></span>
+</span><span class='line'><span class="w">        </span><span class="p">.</span><span class="n">position_centered</span><span class="p">().</span><span class="n">opengl</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">        </span><span class="p">.</span><span class="n">build</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">renderer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">window</span><span class="p">.</span><span class="n">renderer</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">        </span><span class="p">.</span><span class="n">accelerated</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">        </span><span class="p">.</span><span class="n">build</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="w">    </span><span class="n">renderer</span><span class="p">.</span><span class="n">set_draw_color</span><span class="p">(</span><span class="n">Color</span><span class="o">::</span><span class="n">RGB</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="n">renderer</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="n">renderer</span><span class="p">.</span><span class="n">present</span><span class="p">();</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="w">    </span><span class="n">thread</span><span class="o">::</span><span class="n">sleep_ms</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span><span class="w"></span>
+</span><span class='line'><span class="p">}</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>现在，如果你运行这个程序的话&#8230;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cargo run
+</span><span class='line'>   Compiling arcade-rs v0.1.0 <span class="o">(</span>file:///home/johndoe/projects/arcade-rs<span class="o">)</span>
+</span><span class='line'>     Running <span class="sb">`</span>target/debug/arcade-rs<span class="sb">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://jadpole.github.io/images/arcade-1.png" alt="three_sec" /></p>
+
+<p>&#8230; 你可以看到一个窗口在屏幕上停留了 3 秒钟，然后消失了。就是这样！有趣的部分来了：弄明白刚刚我们所写的究竟是什么意思。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="k">extern</span><span class="w"> </span><span class="n">crate</span><span class="w"> </span><span class="n">sdl2</span><span class="p">;</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一开始我们先包含了作为依赖添加进来的 <code>sdl2</code> <em>crate</em>。如果需要，我们可以像 Python 那样，给它另起一个名字。比如这样：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="k">extern</span><span class="w"> </span><span class="n">crate</span><span class="w"> </span><span class="n">sdl2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pineapple</span><span class="p">;</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>之后我们把代码中出现的所有 <code>sdl2</code> 都换成 <code>pineapple</code>（菠萝） 得到的结果是不变的。虽然我挺喜欢菠萝，接下来的文章里我还是继续使用 <code>sdl2</code> 算了（当然，没人强求 你 也这么做）。有一个类似的语法可以用于重命名被使用（use）的类型（type）和函数（function），我将在<a href="https://jadpole.github.io/arcaders/arcaders-1-6/">第 6 章</a>用到它。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="kn">use</span><span class="w"> </span><span class="n">sdl2</span><span class="o">::</span><span class="n">pixels</span><span class="o">::</span><span class="n">Color</span><span class="p">;</span><span class="w"></span>
+</span><span class='line'><span class="kn">use</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">thread</span><span class="p">;</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>第一行很简单：因为 <code>sdl2::pixels::Color</code> 敲起来太长了，所以我们只使用（use）这一路径下的最后一个标识符 <code>Color</code> 来代表同一事物。<code>use</code> 语句不仅可以用于类型和函数，对 模块（module）同样有效。这就是第二行的用意，现在我们只需要写 <code>thread::某标函数</code> 而不用写 <code>std::thread::某函数</code>。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="k">fn</span><span class="w"> </span><span class="n">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在此，我们声明了作为我们程序的入口的 <code>main</code> 函数。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="kd">let</span><span class="w"> </span><span class="n">sdl_context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sdl2</span><span class="o">::</span><span class="n">init</span><span class="p">().</span><span class="n">video</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="p">.</span><span class="n">build</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>现在，开始触及有趣的部分了！<code>init</code> 函数返回一个我们用来初始化 SDL2 的上下文（context）的对象。厉害之处是这里用到了 <code>Rust</code> 版的<a href="https://aturon.github.io/ownership/builders.html">生成器模式(builder pattern)</a>。就是说，<code>init</code> 返回如下类型的对象：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="n">InitBuilder</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="n">flags</span><span class="o">:</span><span class="w"> </span><span class="kt">u32</span><span class="w"></span>
+</span><span class='line'><span class="p">}</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这一类型提供了一个便于使用 SDL2 API 的接口。通过调用比如像 <code>timer()</code>，<code>joystick()</code> 和 <code>video()</code> 这些方法，我们可以选择性的初始化 SDL2 的某些部分，以最小化这个库的占用空间。一旦准备就绪，我们调用 <code>build()</code> 方法，获得 <code>Result&lt;Sdl, String&gt;</code>。</p>
+
+<p>使用 <code>Result</code> 类型的对象是 <code>Rust</code> 中进行错误处理（error handling）的方式。得到错误值的可能性被集成到了类型系统中，开发者被强制要求去处理这一情况，从而获取函数的结果。这一次，我们只是简单的通过 <code>unwrap()</code> “解封”其中的值，这意味着我们断定（assert）我们得到的是被封装在 <code>Ok</code> 类型中的正确值，否则的话就不再执行后续的代码。我们之所以这么做，是因为如果我们创建不了上下文，我们就无法渲染我们的游戏，我们的程序就失去了它的意义了。</p>
+
+<p>解封（unwrapping）<code>Err</code> 中的值会把错误信息打印出来并引发恐慌（panic），使得程序安全地崩溃掉。如果被解封的值是 <code>Ok(Sdl)</code> 类型的话，解封出来的值会被直接返回并赋值给 <code>sdl_context</code>。</p>
+
+<p>把上下文绑定（binding）到一个标识符的好处是，一旦它脱离了自己的作用域（在 <code>main</code> 函数结束处），它所持有的所有资源都会被自动释放。其实，就算我们的程序运行至某处 panic 了，析构器（destructor）也会被如常调用，以防止内存泄漏。这就是我所指的安全地崩溃掉。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="kd">let</span><span class="w"> </span><span class="n">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sdl_context</span><span class="p">.</span><span class="n">window</span><span class="p">(</span><span class="s">&quot;ArcadeRS Shooter&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p">)</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="p">.</span><span class="n">position_centered</span><span class="p">().</span><span class="n">opengl</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="p">.</span><span class="n">build</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们在此处打开了窗口。它有一个名为“ArcadeRS Shooter”的标题，800 象素的宽度 和 600 象素的高度。像前面一样，这里使用了生成器模式，我们可以方便地使窗口居中和激活 OpenGL 模式（更高效）的渲染。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">renderer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">window</span><span class="p">.</span><span class="n">renderer</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="p">.</span><span class="n">accelerated</span><span class="p">()</span><span class="w"></span>
+</span><span class='line'><span class="w">    </span><span class="p">.</span><span class="n">build</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这一步你懂的！我们在创建一个与窗口关联的渲染器（renderer），把它设置成可以使用 OpenGL 来辅助渲染，之后我们会用它来“作画”。如果创建失败，程序就会伴随着错误信息 panic 掉。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="n">renderer</span><span class="p">.</span><span class="n">set_draw_color</span><span class="p">(</span><span class="n">Color</span><span class="o">::</span><span class="n">RGB</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span><span class="w"></span>
+</span><span class='line'><span class="n">renderer</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span><span class="w"></span>
+</span><span class='line'><span class="n">renderer</span><span class="p">.</span><span class="n">present</span><span class="p">();</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在第一行，我们把笔刷设置为黑色（red=0，green=0，blue=0）。第二行处，我们先清空缓冲区再填入刚刚选择的笔刷颜色。第三行交换缓冲区正式向用户展现我们绘制的画面。</p>
+
+<p>如果我们去掉最后一行，奇怪的事情就发生了。比如在 Gnome 下，窗口的内容被设置成了它背后的画面。虽然可能听起来怪怪的，按照 <code>Rust</code> 世界的传统，<code>renderer</code> 所提供的接口让我们无法轻易地使程序挂掉。</p>
+
+<p><img src="https://jadpole.github.io/images/arcade-2.png" alt="blank_win" /></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rust'><span class='line'><span class="n">thread</span><span class="o">::</span><span class="n">sleep_ms</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span><span class="w"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>继续执行程序前，我们在这里先等待 3000 毫秒，即 3 秒钟。也可以看出，此后 <code>main</code> 函数就结束了，在其中分配的所有资源都会被释放掉。在用户看来，就是程序窗口被关掉。对我们来说，也没有太大的不同。美妙的是，即使此处发生了再多的事情，我们也无需为之操心！</p>
+
+<p>你也许注意到了，我们从头到尾都无需写明任何数据类型。当然，我们使用了诸如 <code>sdl2::init</code> 和 <code>Color::new</code> 这些模块函数（module function）和关联函数（associated function）（也许你会对静态方法这个名字更熟悉些），可是我们从来没有告诉 <code>Rust</code> 我们的上下文的类型是 <code>sdl2::Sdl</code>。这被称为 类型推导（type inference），它是使得 <code>Rust</code> 让人愉快地使用的众多特性之一，虽然它们看起来像是无关紧要的附加品。</p>
+
+<p>这就是本系列的第一部分。<a href="https://jadpole.github.io/arcaders/arcaders-1-2/">下一次</a>，我们将提出一种更好的关闭窗口的方式：通过点击那个叉叉（x）。</p>
+
+<p>在那之前，保持 rusting！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">wenLiangcan</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-11T20:32:00+08:00" pubdate data-updated="true">Aug 11<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gamedev/'>GameDev</a>, <a class='category' href='/blog/categories/rust/'>Rust</a>, <a class='category' href='/blog/categories/translation/'>Translation</a>
+  
+</span>
+
+
+    </p>
+	
+	  
+        
+            
+            
+        
+
+    
+
+
+
+
+        
+    
+
+
+
+
+
+<div class="cc-license">
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+        <img alt="Creative Commons Attribution-NonCommercial 3.0 Unported License" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" />
+    </a><br />
+    This work is licensed under a
+    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.
+</div>
+
+	
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/08/11/arcaders-1-00/" title="Previous Post: 【译】ArcadeRs 1.0: 介绍">&laquo; 【译】ArcadeRs 1.0: 介绍</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    ﻿<section>
+  <h1>About Me</h1>
+  <p>我是尹良灿</p>
+  <p>闲人一个</p>
+  <p>这是我的学习笔记</p>
+</section><section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/android/'>Android (2)</a></li>
+<li class='category'><a href='/blog/categories/arch-linux/'>Arch Linux (4)</a></li>
+<li class='category'><a href='/blog/categories/browser/'>Browser (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>C# (1)</a></li>
+<li class='category'><a href='/blog/categories/chrome/'>Chrome (1)</a></li>
+<li class='category'><a href='/blog/categories/db/'>DB (1)</a></li>
+<li class='category'><a href='/blog/categories/firefox/'>Firefox (1)</a></li>
+<li class='category'><a href='/blog/categories/gamedev/'>GameDev (2)</a></li>
+<li class='category'><a href='/blog/categories/images/'>Images (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>Linux (7)</a></li>
+<li class='category'><a href='/blog/categories/mono/'>Mono (1)</a></li>
+<li class='category'><a href='/blog/categories/monogame/'>MonoGame (1)</a></li>
+<li class='category'><a href='/blog/categories/network/'>Network (3)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
+<li class='category'><a href='/blog/categories/regex/'>Regex (1)</a></li>
+<li class='category'><a href='/blog/categories/rust/'>Rust (2)</a></li>
+<li class='category'><a href='/blog/categories/sql/'>SQL (1)</a></li>
+<li class='category'><a href='/blog/categories/translation/'>Translation (2)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>Vim (2)</a></li>
+
+  </ul>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/08/11/arcaders-1-01/">【译】ArcadeRs 1.1: 一个简单的窗口</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/11/arcaders-1-00/">【译】ArcadeRs 1.0: 介绍</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/02/processing-pattern-matches-while-performing-string-substitutions-in-python/">如何在 Python 中操作正则替换的匹配结果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/26/fix-gvim-empty-border-on-fullscreen/">去除全屏下 GVim 出现的白边</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/18/ipv6-to-ipv4-proxy/">IPv6 到 IPv4 的代理</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:wheely" target="_blank">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "wheely"; //id target for pinboard list
+  var pinboard_count = 3; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - wenLiangcan -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'wenLiangcan';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01/';
+        var disqus_url = 'http://wenLiangcan.github.io/blog/2015/08/11/arcaders-1-01/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

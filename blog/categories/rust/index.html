@@ -5,17 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>SQL：一次性插入多个元组 - 尹良灿得闲</title>
+  <title>Category: Rust - 尹良灿得闲</title>
   <meta name="author" content="wenLiangcan">
 
   
-  <meta name="description" content="书本上没有，在 StackOverflow 找到了，做一下笔记 句式一： 1
-2
-3
-4
-5
-INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
-(&#39;data1&#39;, &#39; &hellip;">
+  <meta name="description" content="Category: Rust">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +18,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert">
+  <link rel="canonical" href="http://wenLiangcan.github.ioblog/categories/rust">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/wenLiangcan" rel="alternate" title="尹良灿得闲" type="application/atom+xml">
@@ -82,166 +76,50 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">SQL：一次性插入多个元组</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-           | <a href="#disqus_thread"
-             data-disqus-identifier="http://wenLiangcan.github.io">Comments</a>
-        
-      </p>
+    <h1 class="entry-title">Category: Rust</h1>
     
   </header>
-
-
-<div class="entry-content"><p>书本上没有，在 StackOverflow 找到了，做一下笔记</p>
-
-<p><strong>句式一：</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span> <span class="p">(</span><span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;column2&#39;</span><span class="p">)</span> <span class="k">VALUES</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span><span class="p">),</span>
-</span><span class='line'><span class="p">(</span><span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>                      <br/>
-<strong>句式二：</strong></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="s1">&#39;tablename&#39;</span>
-</span><span class='line'>      <span class="k">SELECT</span> <span class="s1">&#39;data1&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;data2&#39;</span> <span class="k">AS</span> <span class="s1">&#39;column2&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data3&#39;</span><span class="p">,</span> <span class="s1">&#39;data4&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data5&#39;</span><span class="p">,</span> <span class="s1">&#39;data6&#39;</span>
-</span><span class='line'><span class="k">UNION</span> <span class="k">SELECT</span> <span class="s1">&#39;data7&#39;</span><span class="p">,</span> <span class="s1">&#39;data8&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h2>参考资料</h2>
-
-<ul>
-<li><a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Is it possible to insert multiple rows at a time in an SQLite database?</a></li>
-</ul>
-
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">wenLiangcan</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2015</h2>
 
-
-<time datetime="2013-04-24T19:21:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-      
-
-<span class="categories">
+<article>
   
-    <a class='category' href='/blog/categories/db/'>DB</a>, <a class='category' href='/blog/categories/sql/'>SQL</a>
-  
-</span>
+<h1><a href="/blog/2015/08/11/arcaders-1-01/">【译】ArcadeRs 1.1: 一个简单的窗口</a></h1>
+<time datetime="2015-08-11T20:32:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>11</span> <span class='year'>2015</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/gamedev/'>GameDev</a>, <a class='category' href='/blog/categories/rust/'>Rust</a>, <a class='category' href='/blog/categories/translation/'>Translation</a></span>
+</footer>
 
 
-    </p>
-	
-	  
-        
-            
-            
-        
-
-    
-
-
-
-
-        
-    
-
-
-
-
-
-<div class="cc-license">
-    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
-        <img alt="Creative Commons Attribution-NonCommercial 3.0 Unported License" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" />
-    </a><br />
-    This work is licensed under a
-    <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.
-</div>
-
-	
-    
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/" data-via="" data-counturl="http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/04/21/vim-compilation/" title="Previous Post: Windows下编译支持多种脚本语言的64位VIM(GVIM)">&laquo; Windows下编译支持多种脚本语言的64位VIM(GVIM)</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/06/30/iframe-dom/" title="Next Post: JS 操作 iframe 非跨域引用页面的DOM">JS 操作 iframe 非跨域引用页面的DOM &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+<article>
+  
+<h1><a href="/blog/2015/08/11/arcaders-1-00/">【译】ArcadeRs 1.0: 介绍</a></h1>
+<time datetime="2015-08-11T20:14:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>11</span> <span class='year'>2015</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/gamedev/'>GameDev</a>, <a class='category' href='/blog/categories/rust/'>Rust</a>, <a class='category' href='/blog/categories/translation/'>Translation</a></span>
+</footer>
+
+
+</article>
+
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -344,10 +222,7 @@ INSERT INTO &#39;tablename&#39; (&#39;column1&#39;, &#39;column2&#39;) VALUES
       var disqus_shortname = 'wenLiangcan';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/';
-        var disqus_url = 'http://wenLiangcan.github.io/blog/2013/04/24/sql-multiple-row-insert/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
