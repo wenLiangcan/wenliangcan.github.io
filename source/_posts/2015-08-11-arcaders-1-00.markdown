@@ -1,0 +1,77 @@
+---
+layout: post
+title: "【译】ArcadeRs 1.0: 介绍"
+date: 2015-08-11 20:14
+comments: true
+categories: [Rust, GameDev, Translation]
+---
+
+> 原文：[ArcadeRS 1.0: The project][en_part_0]
+
+本系列文章的目是通过开发一个简单的老式射击游戏来一探 `Rust` 这门语言，这是其中的介绍部分。除去介绍，本系列共有 16 个部分组成：
+
+1. [一个简单的窗口][part_1]，我们在此安装 SDL2
+2. [事件处理][part_2]，我们在此讨论生存期限
+3. [处理更多的事件][part_3]，我们在此讨论宏
+4. [视图][part_4]，我们在此学习装箱，模式匹配，trait 对象，还有动态分发
+5. [视图的切换][part_5]，我们在此使用装箱，模式匹配，trait 对象，还有动态分发
+6. [移动的矩形][part_6]，我们在此绘制图像
+7. [Main menu][part_7], where we play with textures and Rust's vectors
+8. [Sprites][part_8], where we create shareable images
+9. [Backgrounds][part_9], where we handle resizing, scale and translate through time
+10. [The player's ship][part_10], where we control a multi-sprite object
+11. [Shooting bullets][part_11], where we handle resource pooling
+12. [Animated sprites][part_12], where we render animated asteroids
+13. [Asteroid attack!][part_13], where we make multiple objects interact
+14. [Explosions][part_14], where we see things do boom.
+15. [Music][part_15], where we hear things go boom.
+16. [High score & wrap-up][part_16], where we play with the filesystem
+
+这是一篇写给那些哪怕仅仅是通过某个脚本语言，已经对软件开发这门技艺有所了解的人的教程，他们刚刚发现了这头名为 `Rust` 的怪兽。他们过了一遍[官方教程][book]，阅读了大量关于这门看起来熟悉，据说向原有的软件安全概念发起了挑战的语言的博文，然后 excited，想要发掘如何真正地在实践中运用 `Rust`。   
+
+我对读者的要求是，他或她（或者它？）应该理解诸如接口，方法，条件结构，和（基础的）静态类型这些概念。多数情况下，这些术语的含义在其上下文中是不言自明的。然而，如果理解它们对你来说很成问题，提醒一下我不会对其作长篇大论的解释。   
+
+我还期望你阅读这篇教程前已经学习过一点 `Rust`，即使只是浅显的部分。比如你得明白 `Rust` 的 `use` 语句，哪怕仅限于在 `main.rs` 文件里，是用来干什么的。当然，你不需要成为一名专家才能探索其中的微妙。    
+
+在接下来的几周里，我们将会基于 Mike Geig 的棒棒哒 [2D 游戏开发教程][course] 来制作一个太空射击游戏。我们还会编写一个叫做 `phi` 的库，它会为我们提供诸如视图（在 LibGDX 中称为 screens），内置碰撞检测（虽然很基础）的矩形，和动态精灵等 2D 游戏所需的组件。   
+
+我们将要用到的库是 AngryLawyer 的 SDL2 的绑定，版本为 6.0，你可以在[这里][sdl2]找到，以及相关的一些插件。  
+
+继续讲述前，我要强调的是你无需精通 `Rust` 再阅读这篇教程。相反，本教程的目的之一就是探索 `Rust` 的微妙之处，哪怕不是主要的，基于此，老实说，我不推荐在生产中使用 `phi`。可是，你至少得浏览过[官方教程][book]或者 [Rust by Example][example]。   
+
+基本上，我会直接展示如何*使用*而不会解释语法。   
+
+所以，不多说，我们[开始吧][part_1]。
+
+
+
+[part_1]: /blog/2015/08/11/arcaders-1-01/
+[part_2]: https://jadpole.github.io/arcaders/arcaders-1-2/
+[part_3]: https://jadpole.github.io/arcaders/arcaders-1-3/
+[part_4]: https://jadpole.github.io/arcaders/arcaders-1-4/
+[part_5]: https://jadpole.github.io/arcaders/arcaders-1-5/
+[part_6]: https://jadpole.github.io/arcaders/arcaders-1-6/
+[part_7]: #
+[part_8]: #
+[part_9]: #
+[part_10]: #
+[part_11]: #
+[part_12]: #
+[part_13]: #
+[part_14]: #
+[part_15]: #
+[part_16]: #
+
+[en_part_0]: https://jadpole.github.io/arcaders/arcaders-1-0/
+[en_part_1]: https://jadpole.github.io/arcaders/arcaders-1-1/
+[en_part_2]: https://jadpole.github.io/arcaders/arcaders-1-2/
+[en_part_3]: https://jadpole.github.io/arcaders/arcaders-1-3/
+[en_part_4]: https://jadpole.github.io/arcaders/arcaders-1-4/
+[en_part_5]: https://jadpole.github.io/arcaders/arcaders-1-5/
+[en_part_6]: https://jadpole.github.io/arcaders/arcaders-1-6/
+
+[book]: https://doc.rust-lang.org/book/
+[course]: http://fixbyproximity.com/2d-game-development-course/
+[sdl2]: https://github.com/AngryLawyer/rust-sdl2
+[example]: http://rustbyexample.com/
+

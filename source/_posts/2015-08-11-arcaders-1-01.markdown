@@ -1,0 +1,244 @@
+---
+layout: post
+title: "【译】ArcadeRs 1.1: 一个简单的窗口"
+date: 2015-08-11 20:32
+comments: true
+categories: [Rust, GameDev, Translation]
+---
+
+> 原文：[ArcadeRS 1.1: A simple window][en_part_1]
+
+本系列文章的目是通过开发一个简单的老式射击游戏来一探 `Rust` 这门语言，这是其中的第一部分。除去介绍，本系列共有 16 个部分组成：
+
+1. [一个简单的窗口][part_1]，我们在此安装 SDL2
+2. [事件处理][part_2]，我们在此讨论生存期限
+3. [处理更多的事件][part_3]，我们在此讨论宏
+4. [视图][part_4]，我们在此学习装箱，模式匹配，trait 对象，还有动态分发
+5. [视图的切换][part_5]，我们在此使用装箱，模式匹配，trait 对象，还有动态分发
+6. [移动的矩形][part_6]，我们在此绘制图像
+7. [Main menu][part_7], where we play with textures and Rust's vectors
+8. [Sprites][part_8], where we create shareable images
+9. [Backgrounds][part_9], where we handle resizing, scale and translate through time
+10. [The player's ship][part_10], where we control a multi-sprite object
+11. [Shooting bullets][part_11], where we handle resource pooling
+12. [Animated sprites][part_12], where we render animated asteroids
+13. [Asteroid attack!][part_13], where we make multiple objects interact
+14. [Explosions][part_14], where we see things do boom.
+15. [Music][part_15], where we hear things go boom.
+16. [High score & wrap-up][part_16], where we play with the filesystem
+
+## 一个华丽的新项目
+
+作为开始，让我们亲切地请求 Cargo 为我们创建一个新项目。在你的项目目录下执行：
+
+```sh
+$ cargo new arcade-rs --bin
+$ cd arcade-rs
+```
+
+如果你打开生成的 `Cargo.toml`，你可以看到类似如下的内容：
+
+```
+[package]
+name = "arcade-rs"
+version = "0.1.0"
+authors = ["John Doe <john.doe@example.com>"]
+```
+
+你可以通过 `cargo run` 命令运行生成的 `hello world` 程序，然而现在来说这并没有什么卵用。我们要做的是，稍微更改一下这个配置文件以加入所需的依赖。请把以下几行添加到该文件的底部：
+
+```
+[dependencies]
+sdl2 = "0.6"
+```
+
+结束的时候，我们的项目会依赖于更多的外部 `crate` （`Rust` 概念中的 库），不过眼下我们只需要这些。`sdl2` *crate* 使我们可以创建程序窗口，在上面渲染画面和处理各种事件，而这些也正好是我们在接下来的几章将要做的事情。    
+
+> 很可能你的电脑上尚未安装有 SDL2 的开发库，那样的话将无法编译 SDL2 的 Rust 绑定。
+> 我建议你参照 [rust-sdl2 的 README 文件][rust_sdl2] 中的步骤，在你的系统中安装所需的开发库。
+> 等你完成后我们接着继续。
+
+现在，SDL2 已经（希望是）安装在你的系统中了，你可以执行：
+
+```sh
+$ cargo build
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+ Downloading sdl2 v0.6.0
+ Downloading sdl2-sys v0.6.0
+   Compiling sdl2-sys v0.6.0
+   Compiling bitflags v0.2.1
+   Compiling rustc-serialize v0.3.15
+   Compiling libc v0.1.8
+   Compiling rand v0.3.8
+   Compiling num v0.1.25
+   Compiling sdl2 v0.6.0
+   Compiling arcade-rs v0.1.0 (file:///home/johndoe/projects/arcade-rs)
+```
+
+如果一切顺利，各类绑定和它们的依赖就已经编译好而我们也可以开启一个窗口了。否则，很可能你并没有正确安装 SDL2 而你只有解决了这一问题才能进行接下来的步骤。   
+
+## 激动人心的三秒钟
+
+好了，让我们来创建一个窗口。用你最喜欢的文本编辑器打开 `src/main.rs` 然后修改为以下内容：
+
+```rust
+extern crate sdl2;
+
+use sdl2::pixels::Color;
+use std::thread;
+
+fn main() {
+    // 初始化 SDL2
+    let sdl_context = sdl2::init().video()
+        .build().unwrap();
+
+    // 创建窗口
+    let window = sdl_context.window("ArcadeRS Shooter", 800, 600)
+        .position_centered().opengl()
+        .build().unwrap();
+
+    let mut renderer = window.renderer()
+        .accelerated()
+        .build().unwrap();
+
+    renderer.set_draw_color(Color::RGB(0, 0, 0));
+    renderer.clear();
+    renderer.present();
+
+    thread::sleep_ms(3000);
+}
+```
+
+现在，如果你运行这个程序的话...
+
+```sh
+$ cargo run
+   Compiling arcade-rs v0.1.0 (file:///home/johndoe/projects/arcade-rs)
+     Running `target/debug/arcade-rs`
+```
+
+![three_sec]
+
+... 你可以看到一个窗口在屏幕上停留了 3 秒钟，然后消失了。就是这样！有趣的部分来了：弄明白刚刚我们所写的究竟是什么意思。
+
+```rust
+extern crate sdl2;
+```
+
+一开始我们先包含了作为依赖添加进来的 `sdl2` *crate*。如果需要，我们可以像 Python 那样，给它另起一个名字。比如这样：
+
+```rust
+extern crate sdl2 as pineapple;
+```
+
+之后我们把代码中出现的所有 `sdl2` 都换成 `pineapple`（菠萝） 得到的结果是不变的。虽然我挺喜欢菠萝，接下来的文章里我还是继续使用 `sdl2` 算了（当然，没人强求 你 也这么做）。有一个类似的语法可以用于重命名被使用（use）的类型（type）和函数（function），我将在[第 6 章][part_6]用到它。   
+```rust
+use sdl2::pixels::Color;
+use std::thread;
+```
+第一行很简单：因为 `sdl2::pixels::Color` 敲起来太长了，所以我们只使用（use）这一路径下的最后一个标识符 `Color` 来代表同一事物。`use` 语句不仅可以用于类型和函数，对 模块（module）同样有效。这就是第二行的用意，现在我们只需要写 `thread::某标函数` 而不用写 `std::thread::某函数`。   
+
+```rust
+fn main() {
+
+}
+```
+
+在此，我们声明了作为我们程序的入口的 `main` 函数。
+
+```rust
+    let sdl_context = sdl2::init().video()
+        .build().unwrap();
+```
+
+现在，开始触及有趣的部分了！`init` 函数返回一个我们用来初始化 SDL2 的上下文（context）的对象。厉害之处是这里用到了 `Rust` 版的[生成器模式(builder pattern)][builder]。就是说，`init` 返回如下类型的对象：
+
+```rust
+pub struct InitBuilder {
+    flags: u32
+}
+```
+
+这一类型提供了一个便于使用 SDL2 API 的接口。通过调用比如像 `timer()`，`joystick()` 和 `video()` 这些方法，我们可以选择性的初始化 SDL2 的某些部分，以最小化这个库的占用空间。一旦准备就绪，我们调用 `build()` 方法，获得 `Result<Sdl, String>`。   
+
+使用 `Result` 类型的对象是 `Rust` 中进行错误处理（error handling）的方式。得到错误值的可能性被集成到了类型系统中，开发者被强制要求去处理这一情况，从而获取函数的结果。这一次，我们只是简单的通过 `unwrap()` “解封”其中的值，这意味着我们断定（assert）我们得到的是被封装在 `Ok` 类型中的正确值，否则的话就不再执行后续的代码。我们之所以这么做，是因为如果我们创建不了上下文，我们就无法渲染我们的游戏，我们的程序就失去了它的意义了。   
+
+解封（unwrapping）`Err` 中的值会把错误信息打印出来并引发恐慌（panic），使得程序安全地崩溃掉。如果被解封的值是 `Ok(Sdl)` 类型的话，解封出来的值会被直接返回并赋值给 `sdl_context`。   
+
+把上下文绑定（binding）到一个标识符的好处是，一旦它脱离了自己的作用域（在 `main` 函数结束处），它所持有的所有资源都会被自动释放。其实，就算我们的程序运行至某处 panic 了，析构器（destructor）也会被如常调用，以防止内存泄漏。这就是我所指的安全地崩溃掉。   
+
+```rust
+    let window = sdl_context.window("ArcadeRS Shooter", 800, 600)
+        .position_centered().opengl()
+        .build().unwrap();
+```
+
+我们在此处打开了窗口。它有一个名为“ArcadeRS Shooter”的标题，800 象素的宽度 和 600 象素的高度。像前面一样，这里使用了生成器模式，我们可以方便地使窗口居中和激活 OpenGL 模式（更高效）的渲染。 
+
+```rust
+    let mut renderer = window.renderer()
+        .accelerated()
+        .build().unwrap();
+```
+
+这一步你懂的！我们在创建一个与窗口关联的渲染器（renderer），把它设置成可以使用 OpenGL 来辅助渲染，之后我们会用它来“作画”。如果创建失败，程序就会伴随着错误信息 panic 掉。   
+
+```rust
+    renderer.set_draw_color(Color::RGB(0, 0, 0));
+    renderer.clear();
+    renderer.present();
+```
+
+在第一行，我们把笔刷设置为黑色（red=0，green=0，blue=0）。第二行处，我们先清空缓冲区再填入刚刚选择的笔刷颜色。第三行交换缓冲区正式向用户展现我们绘制的画面。
+
+如果我们去掉最后一行，奇怪的事情就发生了。比如在 Gnome 下，窗口的内容被设置成了它背后的画面。虽然可能听起来怪怪的，按照 `Rust` 世界的传统，`renderer` 所提供的接口让我们无法轻易地使程序挂掉。
+
+![blank_win] 
+
+```rust
+    thread::sleep_ms(3000);
+```
+
+继续执行程序前，我们在这里先等待 3000 毫秒，即 3 秒钟。也可以看出，此后 `main` 函数就结束了，在其中分配的所有资源都会被释放掉。在用户看来，就是程序窗口被关掉。对我们来说，也没有太大的不同。美妙的是，即使此处发生了再多的事情，我们也无需为之操心！
+
+你也许注意到了，我们从头到尾都无需写明任何数据类型。当然，我们使用了诸如 `sdl2::init` 和 `Color::new` 这些模块函数（module function）和关联函数（associated function）（也许你会对静态方法这个名字更熟悉些），可是我们从来没有告诉 `Rust` 我们的上下文的类型是 `sdl2::Sdl`。这被称为 类型推导（type inference），它是使得 `Rust` 让人愉快地使用的众多特性之一，虽然它们看起来像是无关紧要的附加品。  
+
+这就是本系列的第一部分。[下一次][part_2]，我们将提出一种更好的关闭窗口的方式：通过点击那个叉叉（x）。   
+
+在那之前，保持 rusting！
+
+
+
+[part_1]: /blog/2015/08/11/arcaders-1-01/
+[part_2]: https://jadpole.github.io/arcaders/arcaders-1-2/
+[part_3]: https://jadpole.github.io/arcaders/arcaders-1-3/
+[part_4]: https://jadpole.github.io/arcaders/arcaders-1-4/
+[part_5]: https://jadpole.github.io/arcaders/arcaders-1-5/
+[part_6]: https://jadpole.github.io/arcaders/arcaders-1-6/
+[part_7]: #
+[part_8]: #
+[part_9]: #
+[part_10]: #
+[part_11]: #
+[part_12]: #
+[part_13]: #
+[part_14]: #
+[part_15]: #
+[part_16]: #
+
+[en_part_0]: https://jadpole.github.io/arcaders/arcaders-1-0/
+[en_part_1]: https://jadpole.github.io/arcaders/arcaders-1-1/
+[en_part_2]: https://jadpole.github.io/arcaders/arcaders-1-2/
+[en_part_3]: https://jadpole.github.io/arcaders/arcaders-1-3/
+[en_part_4]: https://jadpole.github.io/arcaders/arcaders-1-4/
+[en_part_5]: https://jadpole.github.io/arcaders/arcaders-1-5/
+[en_part_6]: https://jadpole.github.io/arcaders/arcaders-1-6/
+
+[rust_sdl2]: https://github.com/AngryLawyer/rust-sdl2#sdl20--development-libraries
+[builder]: https://aturon.github.io/ownership/builders.html
+
+
+
+[three_sec]: https://jadpole.github.io/images/arcade-1.png
+[blank_win]: https://jadpole.github.io/images/arcade-2.png
+
